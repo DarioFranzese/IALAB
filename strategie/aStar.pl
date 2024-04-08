@@ -18,14 +18,14 @@ aStar([Corrente, Path, Valutazione], Frontiera, Visitati, Risultato):-
          [TestaDellaNuovaFrontiera | CodaDellaNuovaFrontiera]),
     aStar(TestaDellaNuovaFrontiera, CodaDellaNuovaFrontiera, _, _).
 
-checkVisitati(NuoviVisitati, _, [], NuoviVisitati).
+checkVisitati(NuoviVisitati, _, [], NuoviVisitati):- write(NuoviVisitati).
 checkVisitati(Visitati, Corrente, [Azione | CodaAzioni], NuoviVisitati):-
     trasforma(Azione, Corrente, NuovoStato),
     \+member(NuovoStato, Visitati),!,
     checkVisitati([NuovoStato | Visitati], Corrente, CodaAzioni, NuoviVisitati).
 
-checkVisitati(Visitati, _, [ _ | CodaAzioni], _):-
-    checkVisitati(Visitati, _, CodaAzioni, _).
+checkVisitati(Visitati, Corrente, [ _ | CodaAzioni], _):-
+    checkVisitati(Visitati, Corrente, CodaAzioni, _).
 
 
 %generaStati(Corrente, Path, Azioni, Frontiera, Visitati, ):-
