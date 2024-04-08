@@ -15,7 +15,7 @@ applicabile(est, pos(R,C)):-
     CDestra is C+1,
     \+occupata(pos(R, CDestra)).
 
-applicabile(ovest, post(R,C)):-
+applicabile(ovest, pos(R,C)):-
     C >= 1,
     CSinistra is C-1,
     \+occupata(pos(R, CSinistra)).
