@@ -35,19 +35,27 @@ checkVisitati(Visitati, Corrente, [Azione | CodaAzioni], NuoviStati, Risultato, 
 checkVisitati(Visitati, Corrente, [ _ | CodaAzioni], NuoviStati, Risultato, NuoviVisitati):-
     checkVisitati(Visitati, Corrente, CodaAzioni, NuoviStati, Risultato, NuoviVisitati).
 
-%genera stati in realta' deve solo aggiungere i nuovi stati alla frontiera
 
 %caso base
 generaStati(_, _, _, [], NuovaFrontiera, NuovaFrontiera). %se ho finito i nuovi sttai da inserire, sono nel caso base
 
 %caso ricorsivo
-%forse non ha bisogno ne di Corrente ne di Valutazione
-%azione serve solo per concatenare il path quanto si inserisce il nuovo stato nella frontiera
-%forse nuova frontiera e' inutile si puo' usare Frontiera come in/out
 generaStati(Corrente, Path, Valutazione, [[NuovoStato, Azione] | CodaNuoviStati], Frontiera, NuovaFrontiera):-
     valutazione(NuovoStato, Path, NuovaValutazione),
     inserimentoOrdinato(NuovoStato, [Azione|Path], NuovaValutazione, Frontiera, Risultato),
     generaStati(Corrente, Path, Valutazione, CodaNuoviStati, Risultato, NuovaFrontiera).
 
-inserimentoOrdinato(NuovoStato, Path, Valutazione, Frontiera, NuovaFrontiera):-
-    append([[NuovoStato, Path, Valutazione]], Frontiera, NuovaFrontiera). %prova non ordinata
+%caso base in cui Valutazione e' il valore Massimo della lista
+inserimentoOrdinato(NuovoStato, Path, Valutazione, [], [[NuovoStato, Path, Valutazione]]):-!.
+
+inserimentoOrdinato(NuovoStato, Path, Valutazione, [[TestaStato, TestaPath, Val] | CodaFrontiera], [[NuovoStato, Path, Valutazione], [TestaStato, TestaPath, Val] | CodaFrontiera]):-
+%   append([[NuovoStato, Path, Valutazione]], Frontiera, NuovaFrontiera). %prova non ordinata
+    Valutazione =< Val.
+
+%inserimento ordinato in lista ordinata di interi esempio
+inserimentoOrdinato(NuovoStato, Path, Valutazione, [[TestaStato, TestaPath, Val] | CodaFrontiera], [[TestaStato, TestaPath, Val] | NuovaFrontiera]):-
+    Valutazione > Val,!,
+    inserimentoOrdinato(NuovoStato, Path, Valutazione, CodaFrontiera, NuovaFrontiera).
+    
+
+
