@@ -1,20 +1,19 @@
-:- ['../labirinti/dominio_lab2'], ['../utility'], ['../azioni'].
+:- ['../labirinti/labirinto160x160'], ['../utility'], ['../azioni'], ['../visualizza'].
 
 algoritmoAStar:-
     iniziale(Start),
     valutazione(Start, [], Valutazione),
     aStar([Start, [], Valutazione], [], [Start], ReversedRis),
     reverse(ReversedRis, Risultato),
-    write('\nIl risultato \' e '), write(Risultato), !. %con il cat qui restituisce solo il primo risultato
+    write('\nIl risultato \' e '), write(Risultato), !,
+    length(Risultato, Lung), write(length(Lung)). %con il cat qui restituisce solo il primo risultato
 
 
 %% CASO BASE - TERMINAZIONE
 aStar([Corrente, Path, _], _, _, Path):-
-    finale(Corrente), !,
-    write("\nFINALE??Corrente: \n"), write(Corrente).
+    finale(Corrente), !.
 
 aStar([Corrente, Path, Valutazione], Frontiera, Visitati, Risultato):-
-    write("\nCorrente: \n"), write(Corrente),
     findall(Azione, applicabile(Azione, Corrente), Azioni),
     checkVisitati(Visitati, Corrente, Azioni, [], NuoviStati, NuoviVisitati), %NuoviStati sono i nuovi stati generati, visitati ora e' di input output e viene aggiornata
 
