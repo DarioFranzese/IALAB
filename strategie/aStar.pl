@@ -1,4 +1,4 @@
-:- ['../labirinti/labirintoProf'], ['../utility'], ['../azioni'].
+:- ['../labirinti/dominio_lab2'], ['../utility'], ['../azioni'].
 
 algoritmoAStar:-
     iniziale(Start),
