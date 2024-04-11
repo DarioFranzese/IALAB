@@ -1,6 +1,6 @@
 
 
-valutazione(StatoCorrente, Path, Risultato):-
+valutazione(StatoCorrente, Path, Risultato):- 
     distanzaMinima(StatoCorrente, Distanza),
     length(Path, Lunghezza),
     Risultato is Lunghezza + Distanza.
