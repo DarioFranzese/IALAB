@@ -6,7 +6,7 @@ algoritmoAStar:-
     aStar([Start, [], Valutazione], [], [Start], ReversedRis),
     reverse(ReversedRis, Risultato),
     write('\nIl risultato \' e '), write(Risultato), !,
-    length(Risultato, Lung), write(length(Lung)). %con il cat qui restituisce solo il primo risultato
+    length(Risultato, Lung), write("\nLunghezza Percorso: "), write(length(Lung)). %con il cat qui restituisce solo il primo risultato
 
 
 %% CASO BASE - TERMINAZIONE
