@@ -1,30 +1,40 @@
-:-["9_labirinto.pl"], ["9_azioni.pl"].
+:- ['../labirinti/labFacile'], ['../utility'], ['../azioni'], ['../visualizza'].
 
-
-ricerca(Cammino,Soglia):-
+ricerca(Cammino, Soglia):-
     iniziale(S0),
-    wrapper(S0,Soglia,[],Cammino),
+    wrapperRicProf(S0, Soglia, Cammino),
     write(Cammino).
-    %ric_prof(S0,NuovaSoglia,[],Cammino),!.
 
-wrapper(Stato, _, _, _):-
-    finale(Stato), !.
+%% Ricerca in profondità
 
-wrapper(Stato, Soglia, Visitati, Cammino):-
-    \+ric_prof(Stato, Soglia, Visitati, Cammino),
-    NewSoglia is Soglia + 1,
-    wrapper(Stato, NewSoglia, Visitati, Cammino).
-/*
-ricerca(Cammino, Soglia):- 
+wrapperRicProf(StatoIniziale, Soglia, Cammino):- ric_prof(StatoIniziale, Soglia, [], Cammino),!.
+
+wrapperRicProf(StatoIniziale, Soglia, Cammino):-
     NuovaSoglia is Soglia +1,
-    ricerca(Cammino, NuovaSoglia).
-*/
+    %Qui andrebbe aggiunto il controllo sul massimo della soglia
+    wrapperRicProf(StatoIniziale, NuovaSoglia, Cammino). %la lista vuota sono i visitati
 
-ric_prof(S,_,_,[]):-finale(S),!.
-ric_prof(S,Soglia,Visitati,[Az|SeqAzioni]):-
-    Soglia > 0,
-    applicabile(Az,S),
-    trasforma(Az,S,SNuovo),
-    \+member(SNuovo,Visitati),
-    NuovaSoglia is Soglia-1,
-    ric_prof(SNuovo,NuovaSoglia,[S|Visitati],SeqAzioni).
+
+%% CASO BASE
+ric_prof(S, _, _, []):- 
+    finale(S),!.
+
+%% PASSO INDUTTIVO
+ric_prof(Corrente, Soglia, Visitati, [Az | SeqAzioni]):-
+    Soglia > 0,!,
+    findall(Az, applicabile(Az, Corrente), Azioni),
+    generaStato(Azioni, Corrente, SeqAzioni, NuovoStato),
+    NuovaSoglia is Soglia -1,
+    ric_prof(NuovoStato, NuovaSoglia, [Corrente | Visitati], SeqAzioni).
+
+
+generaStato([], _, _, NuovoStato).
+
+generaStato([Azione | CodaAzioni], Corrente, Cammino, NuovoStato):-
+    trasforma(Azione, Corrente, Stato),
+    valutazione(Stato, Cammino, Risultato),
+    write("\nRisultato e "), write(Risultato).
+
+
+
+

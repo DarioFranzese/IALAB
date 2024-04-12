@@ -1,4 +1,4 @@
-:- ['../labirinti/labirinto160x160'], ['../utility'], ['../azioni'], ['../visualizza'].
+:- ['../labirinti/hard15x15'], ['../utility'], ['../azioni'], ['../visualizza'].
 
 algoritmoAStar:-
     iniziale(Start),
