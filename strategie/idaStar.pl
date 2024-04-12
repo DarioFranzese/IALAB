@@ -17,16 +17,21 @@ idaStar(Corrente, Soglia, Path, Visitati, NextSoglia):-
     length(Path, Lunghezza),
     Lunghezza =< Soglia,!,
     findall(Azione, applicabile(Corrente, Azione), Azioni),
-    generaStati(Corrente, Azioni, ),
-    
-    NextSoglia is Lunghezza + NuovaSoglia, %% f = g+h
-    idaStar(NuovoStato, Soglia, [Az | Path], [NuovoStato | Visitati], NextSoglia).
+    generaStati(Corrente, Azioni, Visitati, NuovoStato, Azione, CostoEuristica),
+    NextSoglia is Lunghezza + CostoEuristica, %% f = g+h
+    idaStar(NuovoStato, Soglia, [Azione | Path], Visitati, NextSoglia).
 
-generaStati(_, [], _, Stati).
-generaStati(Corrente, [Azione | CodaAzioni ], NuovoStato, Az):-
+generaStati(_, [], _, _, _, _).
+generaStati(Corrente, [Azione | CodaAzioni ], Visitati, NuovaPozisione, Azione, CostoEuristica):-
     trasforma(Azione, Corrente, NuovaPozisione),
-    valutazione(NuovaPozisione, [], Costo),
+    \+member(NuovaPozisione, Visitati), !,
+    valutazione(NuovaPozisione, [], CE),
+    CostoEuristica is min(CostoEuristica, CE),
+    generaStati(Corrente, CodaAzioni, [NuovaPozisione | Visitati], NuovaPozisione, Azione, CostoEuristica).
     
-    generaStati(Corrente, CodaAzioni, [NuovaPozisione | _]).
-    
+
+
+
+
+
 
