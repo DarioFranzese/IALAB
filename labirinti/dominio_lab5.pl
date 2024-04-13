@@ -3,6 +3,7 @@ num_righe(20).
 num_colonne(20).
 
 /*pos(riga, colonna)*/
+limite(Risultato) :- num_righe(NR), num_colonne(NC), Risultato is NR*NC.
 
 /*pos iniziale e pos finale.*/
 iniziale(pos(4,2)).

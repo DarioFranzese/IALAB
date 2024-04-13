@@ -1,19 +1,20 @@
-:- ['../labirinti/labirintoProf'], ['../utility'], ['../azioni'], ['../visualizza'].
+:- ['../labirinti/labirinto160x160'], ['../utility'], ['../azioni'], ['../visualizza'].
 
 ricerca(Cammino):-
     iniziale(S0),
     valutazione(S0, [], Soglia),
-    assert(euristicaMinima(Soglia)),
-    write('\nEuristica minima: '), write(Soglia), write('\n'),
+    %assert(euristicaMinima(Soglia)),
     wrapperRicProf(S0, Soglia, Cammino),
-    write('\nIl risultato e' ), write(Cammino), write('\n ').
+    write('\nIl risultato e' ), write(Cammino), write('\n '), 
+    write('La lunghezza e '), length(Cammino, Int), write(Int).
 
 %% Ricerca in profondità
 
 wrapperRicProf(StatoIniziale, Soglia, Cammino):- ric_prof(StatoIniziale, Soglia, [], Cammino),!.
 
-wrapperRicProf(StatoIniziale, _, Cammino):-
-    euristicaMinima(NuovaSoglia),
+wrapperRicProf(StatoIniziale, Soglia, Cammino):- %Soglia era dontcare
+    %euristicaMinima(NuovaSoglia),
+    NuovaSoglia is Soglia + 1,
     write('\nNuova Soglia: '), write(NuovaSoglia),write('\n'),
     limite(Limite),
     Limite > NuovaSoglia,!,
@@ -43,6 +44,11 @@ ric_prof(Corrente, Soglia, Visitati, [Azione | SeqAzioni]):-
 generaStato([], _, _, NuovoStato, NuovoStato, NuovaAzione, NuovaAzione, Minimo):- 
     retractall(euristicaMinima(_)),
     assert(euristicaMinima(Minimo)).
+%Caso in cui lo stato generato e' gia' stato visitato
+generaStato([Azione | CodaAzioni], Corrente, Cammino, TempStato, NuovoStato, TempAzione, NuovaAzione,  Minimo):- %NuovaAzione dontcare?
+    trasforma(Azione, Corrente, Stato),
+    member(Stato, Cammino),!,
+    generaStato(CodaAzioni, Corrente, Cammino,  TempStato, NuovoStato, TempAzione, NuovaAzione, Minimo).
 
 %Caso in cui il nuovo stato generato e' il minimo, aggiorno l' euristica
 generaStato([Azione | CodaAzioni], Corrente, Cammino, _, NuovoStato, _, NuovaAzione, Minimo):- %Temp qui e' un dontcare perche' viene sovrascritto da Stato
