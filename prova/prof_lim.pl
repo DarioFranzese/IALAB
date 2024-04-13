@@ -1,7 +1,10 @@
-:- ['../labirinti/labFacile'], ['../utility'], ['../azioni'], ['../visualizza'].
+:- ['../labirinti/labirintoProf'], ['../utility'], ['../azioni'], ['../visualizza'].
 
-ricerca(Cammino, Soglia):-
+ricerca(Cammino):-
     iniziale(S0),
+    valutazione(S0, [], Soglia),
+    assert(euristicaMinima(Soglia)),
+    write('\nEuristica minima: '), write(Soglia), write('\n'),
     wrapperRicProf(S0, Soglia, Cammino),
     write('\nIl risultato e' ), write(Cammino), write('\n ').
 
@@ -9,9 +12,13 @@ ricerca(Cammino, Soglia):-
 
 wrapperRicProf(StatoIniziale, Soglia, Cammino):- ric_prof(StatoIniziale, Soglia, [], Cammino),!.
 
-wrapperRicProf(StatoIniziale, Soglia, Cammino):-
-    NuovaSoglia is Soglia +1,
-    %Qui andrebbe aggiunto il controllo sul massimo della soglia
+wrapperRicProf(StatoIniziale, _, Cammino):-
+    euristicaMinima(NuovaSoglia),
+    write('\nNuova Soglia: '), write(NuovaSoglia),write('\n'),
+    limite(Limite),
+    Limite > NuovaSoglia,!,
+                        %Qui andrebbe aggiunto il controllo sul massimo della soglia
+
     wrapperRicProf(StatoIniziale, NuovaSoglia, Cammino). %la lista vuota sono i visitati
 
 
@@ -33,7 +40,9 @@ ric_prof(Corrente, Soglia, Visitati, [Azione | SeqAzioni]):-
 
 %in genera stato bisogna vedere se si possono aggiungere dei dontcare (tra i temp... e i Nuovo...)
 %Caso base
-generaStato([], _, _, NuovoStato, NuovoStato, NuovaAzione, NuovaAzione, Minimo). %qua con l' assert bisogna aggiustare la soglia usando Minimo per il potenziale prossimo fallimento
+generaStato([], _, _, NuovoStato, NuovoStato, NuovaAzione, NuovaAzione, Minimo):- 
+    retractall(euristicaMinima(_)),
+    assert(euristicaMinima(Minimo)).
 
 %Caso in cui il nuovo stato generato e' il minimo, aggiorno l' euristica
 generaStato([Azione | CodaAzioni], Corrente, Cammino, _, NuovoStato, _, NuovaAzione, Minimo):- %Temp qui e' un dontcare perche' viene sovrascritto da Stato
