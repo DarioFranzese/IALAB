@@ -12,9 +12,8 @@ ricerca(Cammino):-
 
 wrapperRicProf(StatoIniziale, Soglia, Cammino):- ric_prof(StatoIniziale, Soglia, [], Cammino),!.
 
-wrapperRicProf(StatoIniziale, Soglia, Cammino):- %Soglia era dontcare
-    %euristicaMinima(NuovaSoglia),
-    NuovaSoglia is Soglia + 1,
+wrapperRicProf(StatoIniziale, _, Cammino):- %Soglia era dontcare
+    euristicaMinima(NuovaSoglia),
     write('\nNuova Soglia: '), write(NuovaSoglia),write('\n'),
     limite(Limite),
     Limite > NuovaSoglia,!,
@@ -41,28 +40,23 @@ ric_prof(Corrente, Soglia, Visitati, [Azione | SeqAzioni]):-
 
 %in genera stato bisogna vedere se si possono aggiungere dei dontcare (tra i temp... e i Nuovo...)
 %Caso base
-generaStato([], _, _, NuovoStato, NuovoStato, NuovaAzione, NuovaAzione, Minimo):- 
+generaStato([], _, _, NuovoStato, NuovoStato, NuovaAzione, NuovaAzione, Minimo):-
     retractall(euristicaMinima(_)),
     assert(euristicaMinima(Minimo)).
-%Caso in cui lo stato generato e' gia' stato visitato
-generaStato([Azione | CodaAzioni], Corrente, Cammino, TempStato, NuovoStato, TempAzione, NuovaAzione,  Minimo):- %NuovaAzione dontcare?
-    trasforma(Azione, Corrente, Stato),
-    member(Stato, Cammino),!,
-    generaStato(CodaAzioni, Corrente, Cammino,  TempStato, NuovoStato, TempAzione, NuovaAzione, Minimo).
+
 
 %Caso in cui il nuovo stato generato e' il minimo, aggiorno l' euristica
 generaStato([Azione | CodaAzioni], Corrente, Cammino, _, NuovoStato, _, NuovaAzione, Minimo):- %Temp qui e' un dontcare perche' viene sovrascritto da Stato
     trasforma(Azione, Corrente, Stato),
+    \+member(Stato, Cammino),!,
     valutazione(Stato, Cammino, Risultato),
     Minimo > Risultato,!,
     generaStato(CodaAzioni, Corrente, Cammino,  Stato, NuovoStato, Azione, NuovaAzione, Risultato).
 
-%Caso in cui il nuovo stato generato NON e' il minimo
-generaStato([Azione | CodaAzioni], Corrente, Cammino, TempStato, NuovoStato, TempAzione, NuovaAzione,  Minimo):- %NuovaAzione dontcare?
-    trasforma(Azione, Corrente, Stato),
-    valutazione(Stato, Cammino, Risultato),
-    Minimo =< Risultato,!,
-    generaStato(CodaAzioni, Corrente, Cammino,  TempStato, NuovoStato, TempAzione, NuovaAzione, Minimo).
+%Caso in cui il nuovo stato generato NON e' il minimo oppure lo stato gia' era presente nei visitati (insomma deve essere scartato)
+%qua ci possono andare tantissimi dontcares
+generaStato([_ | CodaAzioni], Corrente, Cammino, TempStato, NuovoStato, TempAzione, NuovaAzione,  Minimo):- %NuovaAzione dontcare?
+    generaStato(CodaAzioni, Corrente, Cammino,  TempStato, NuovoStato, TempAzione, NuovaAzione, Minimo), !.
 
 
 

@@ -1,5 +1,8 @@
 num_righe(160).
 num_colonne(160).
+
+limite(Risultato) :- num_righe(NR), num_colonne(NC), Risultato is NR*NC.
+
 iniziale(pos(33,33)).
 finale(pos(123,68)).
 finale(pos(2,160)).
