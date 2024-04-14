@@ -1,8 +1,8 @@
-:- ['labirintoLezione'], ['azioni'], ['utility'], ['visualizza'].
+:- ['../labirinti/labirintoProf'], ['../azioni'], ['../utility'], ['../visualizza'].
 
 ida:-
     iniziale(Start),
-    wrapperRic(Start, Cammino),
+    wrapperRic(Start, Cammino), !,
     reverse(Cammino, Reversed),
     write(Reversed).
 
@@ -19,10 +19,10 @@ ricercaCammino(Stato, 0, _, Cammino):-
     write("\n\n"), 
     write("\n\nStato Finale: "), write(Stato), write("\n\n"). 
 
-ricercaCammino(_, 0, _, _):- 
+ricercaCammino(_, 0, Visitati, Cammino):- 
     iniziale(Start),
     euristicaMinima(Soglia),
-    ricercaCammino(Start, Soglia, [], []).
+    ricercaCammino(Start, Soglia, Visitati, Cammino).
 
 
 ricercaCammino(Stato, Soglia, Visitati, Cammino):-
