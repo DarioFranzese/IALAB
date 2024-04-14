@@ -26,8 +26,8 @@ generaStati(Corrente, [Azione | CodaAzioni ], Visitati, NuovaPozisione, Azione, 
     trasforma(Azione, Corrente, NuovaPozisione),
     \+member(NuovaPozisione, Visitati), !,
     valutazione(NuovaPozisione, [], CE),
-    CostoEuristica is min(CostoEuristica, CE),
-    generaStati(Corrente, CodaAzioni, [NuovaPozisione | Visitati], NuovaPozisione, Azione, CostoEuristica).
+    CostoEuristica1 is min(CostoEuristica, CE),
+    generaStati(Corrente, CodaAzioni, [NuovaPozisione | Visitati], NuovaPozisione, Azione, CostoEuristica1).
     
 
 
