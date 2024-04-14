@@ -3,21 +3,21 @@
 ricerca(Cammino):-
     iniziale(S0),
     valutazione(S0, [], Soglia),
-    %assert(euristicaMinima(Soglia)),
+    assert(euristicaMinima(Soglia)),
     wrapperRicProf(S0, Soglia, Cammino),
     write('\nIl risultato e' ), write(Cammino), write('\n '), 
     write('La lunghezza e '), length(Cammino, Int), write(Int).
 
 %% Ricerca in profondità
 
-wrapperRicProf(StatoIniziale, Soglia, Cammino):- ric_prof(StatoIniziale, Soglia, [], Cammino),!.
+wrapperRicProf(StatoIniziale, Soglia, Cammino):- ric_prof(StatoIniziale, Soglia, [], Cammino), !.
+
 
 wrapperRicProf(StatoIniziale, _, Cammino):- %Soglia era dontcare
     euristicaMinima(NuovaSoglia),
     write('\nNuova Soglia: '), write(NuovaSoglia),write('\n'),
     limite(Limite),
-    Limite > NuovaSoglia,!,
-                        %Qui andrebbe aggiunto il controllo sul massimo della soglia
+    Limite > NuovaSoglia,!, %Controllo sul massimo della soglia
 
     wrapperRicProf(StatoIniziale, NuovaSoglia, Cammino). %la lista vuota sono i visitati
 
@@ -28,21 +28,22 @@ ric_prof(S, _, _, []):-
 
 %% PASSO INDUTTIVO
 ric_prof(Corrente, Soglia, Visitati, [Azione | SeqAzioni]):-
+    write('\nCorrente: '), write(Corrente), write('\n'),
     Soglia > 0,!,
     findall(Az, applicabile(Az, Corrente), Azioni),
     limite(Limite), %limite qui viene usato come massimo intero per il calcolo dell' euristica, l' euristica e' sempre inferiore a questo valore quindi va bene
     generaStato(Azioni, Corrente, Visitati, _, NuovoStato, _, Azione, Limite),    %Si noti che "Cammino" di generaStati in realta' e' Visitati,
                                                                     % irrilevante in quanto quell' informazione viene usata solo 
                                                                     %per calcolare la lunghezza che e' la stessa
-    write('\nNuovo Stato: '), write(NuovoStato),
     NuovaSoglia is Soglia -1,
     ric_prof(NuovoStato, NuovaSoglia, [Corrente | Visitati], SeqAzioni).
 
 %in genera stato bisogna vedere se si possono aggiungere dei dontcare (tra i temp... e i Nuovo...)
 %Caso base
+%se il nuovo minimo e' <= della soglia allora si rompe (va in loop). Bisogna gestire questa cosa.
 generaStato([], _, _, NuovoStato, NuovoStato, NuovaAzione, NuovaAzione, Minimo):-
     retractall(euristicaMinima(_)),
-    assert(euristicaMinima(Minimo)).
+    assert(euristicaMinima(Minimo)). %Sostituisce 124 con 124 e va in loop
 
 
 %Caso in cui il nuovo stato generato e' il minimo, aggiorno l' euristica
@@ -50,7 +51,7 @@ generaStato([Azione | CodaAzioni], Corrente, Cammino, _, NuovoStato, _, NuovaAzi
     trasforma(Azione, Corrente, Stato),
     \+member(Stato, Cammino),!,
     valutazione(Stato, Cammino, Risultato),
-    Minimo > Risultato,!,
+    Minimo > Risultato,!, %quando fallisce qui non arriva al caso base e va in loop perche' non aggiorna la soglia
     generaStato(CodaAzioni, Corrente, Cammino,  Stato, NuovoStato, Azione, NuovaAzione, Risultato).
 
 %Caso in cui il nuovo stato generato NON e' il minimo oppure lo stato gia' era presente nei visitati (insomma deve essere scartato)
