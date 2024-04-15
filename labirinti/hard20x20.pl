@@ -1,5 +1,6 @@
 num_righe(20).
 num_colonne(20).
+limite(400).
 iniziale(pos(9,1)).
 finale(pos(9,20)).
 occupata(pos(1,2)).
