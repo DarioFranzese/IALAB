@@ -49,7 +49,7 @@ generaStato([], _, _, NuovoStato, NuovoStato, NuovaAzione, NuovaAzione, Minimo):
 %Caso in cui il nuovo stato generato e' il minimo, aggiorno l' euristica
 generaStato([Azione | CodaAzioni], Corrente, Cammino, _, NuovoStato, _, NuovaAzione, Minimo):- %Temp qui e' un dontcare perche' viene sovrascritto da Stato
     trasforma(Azione, Corrente, Stato),
-    \+member(Stato, Cammino),!,
+    \+member(Stato, Cammino),!, %% PREDICATO AUSILIARO PER MEMEBER QUI
     valutazione(Stato, Cammino, Risultato),
     Minimo > Risultato,!, %quando fallisce qui non arriva al caso base e va in loop perche' non aggiorna la soglia
     generaStato(CodaAzioni, Corrente, Cammino,  Stato, NuovoStato, Azione, NuovaAzione, Risultato).

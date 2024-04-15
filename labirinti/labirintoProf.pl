@@ -1,7 +1,7 @@
 num_righe(10).
 num_colonne(10).
 
-%limite(Risultato) :- num_righe(NR), num_colonne(NC), Risultato is NR*NC.
+limite(Risultato) :- num_righe(NR), num_colonne(NC), Risultato is NR*NC.
 
 iniziale(pos(4,2)).
 %finale(pos(10,10)).
