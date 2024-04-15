@@ -9,6 +9,7 @@ ida:-
 wrapperRic(Stato, Cammino):-
     valutazione(Stato, Cammino, Costo),
     assert(euristicaMinima(Costo)),
+    write("\nSoglia Iniziale: "), write(Costo), write("\n"),
     ricercaCammino(Stato, Costo, [], Cammino).
 
 
@@ -19,27 +20,34 @@ ricercaCammino(Stato, 0, _, Cammino):-
     write("\n\n"), 
     write("\n\nStato Finale: "), write(Stato), write("\n\n"). 
 
-ricercaCammino(_, 0, Visitati, Cammino):- 
+ricercaCammino(_, 0, _, _):- 
     iniziale(Start),
-    euristicaMinima(Soglia),
-    ricercaCammino(Start, Soglia, Visitati, Cammino).
+    euristicaMinima(Costo),
+    valutazione(Start, [], Val),
+    Soglia is Costo + Val,
+    write("\nSoglia Nuova: "), write(Soglia), write("\n"),
+    ricercaCammino(Start, Soglia, [], []).
 
 
 ricercaCammino(Stato, Soglia, Visitati, Cammino):-
     findall(Azione, applicabile(Azione, Stato), Azioni),
     generaStato(Stato, Azioni, [], Cammino, [NuovoStato, NuovaAzione, CostoAzione]),
+    euristicaMinima(Min),
+    Minimo is min(CostoAzione, Min),
     retractall(euristicaMinima(_)),
-    assert(euristicaMinima(CostoAzione)),
+    assert(euristicaMinima(Minimo)),
     \+member(NuovoStato, Visitati),
-    write("\n"), write(NuovoStato), write("\n"),
+    write("\nNuovoStato: "), write(NuovoStato), write("\n"),
     NuovaSoglia is Soglia - 1, 
     ricercaCammino(NuovoStato, NuovaSoglia, [NuovoStato | Visitati], [NuovaAzione | Cammino]).
 
 ricercaCammino(Stato, _, Visitati, Cammino):-
     findall(Azione, applicabile(Azione, Stato), Azioni),
     generaStato(Stato, Azioni, [], Cammino, [NuovoStato, NuovaAzione, CostoAzione]),
+    euristicaMinima(Min),
+    Minimo is min(CostoAzione, Min),
     retractall(euristicaMinima(_)),
-    assert(euristicaMinima(CostoAzione)),
+    assert(euristicaMinima(Minimo)),
     member(NuovoStato, Visitati),
     ricercaCammino(NuovoStato, 0, Visitati, [NuovaAzione | Cammino]).
 
@@ -51,7 +59,6 @@ generaStato(_, [], StatiCosto, _, NuovoStato):-
 
 
 generaStato(Stato, [Azione | CodaAzioni], StatiCosto, Cammino, NuovoStato):-
-    write("\nSono in generaStato\n"),
     trasforma(Azione, Stato, NuovaPosizione),
     valutazione(NuovaPosizione, Cammino, CostoAzione),
     generaStato(Stato, CodaAzioni, [[NuovaPosizione, Azione, CostoAzione] | StatiCosto], Cammino, NuovoStato).
