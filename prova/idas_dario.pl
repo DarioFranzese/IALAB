@@ -1,6 +1,6 @@
 :- ['../labirinti/hard20x20'], ['../utility'], ['../azioni'], ['../visualizza'].
 
-ricerca(Cammino):-
+ricerca:-
     iniziale(S0),
     valutazione(S0, [], Soglia),
 
@@ -9,9 +9,14 @@ ricerca(Cammino):-
                                     %quindi inserisco direttamente limite per permettere i confronti 
                                     %dei minimi locali (vedi piu' avanti per maggiore chiarezza)
 
+    write('Soglia iniziale: '), write(Soglia), write('\n'),
+    write('Limite: '), write(Limite), write('\n'),
+
     wrapperRicProf(S0, Soglia, Cammino),
+    
     write('\nIl risultato e' ), write(Cammino), write('\n '), 
-    write('La lunghezza e '), length(Cammino, Int), write(Int).
+    write('La lunghezza e '), length(Cammino, Int), write(Int),
+    visualizza_labirinto.
 
 
 %%CASO BASE

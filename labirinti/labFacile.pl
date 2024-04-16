@@ -7,6 +7,6 @@ limite(Risultato) :- num_righe(NR), num_colonne(NC), Risultato is NR*NC.
 
 /*pos iniziale e pos finale.*/
 iniziale(pos(4,2)).
-finale(pos(5,1)).
+finale(pos(50,1)).
 
 occupata(pos(10,10)).
