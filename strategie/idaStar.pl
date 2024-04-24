@@ -1,37 +1,64 @@
-:- ['../labirinti/labirinto160x160'], ['../utility'], ['../azioni'], ['../visualizza'].
+:- ['../labirinti/labirintoProf'], ['../utility'], ['../azioni'], ['../visualizza'].
 
-algoritmoIdaStar:-
-    iniziale(Start),
-    valutazione(Start, [], Soglia),
-    wrapperIdaStar(Start, Soglia, [], [], RisultatoReversed),
-    reverse(RisultatoReversed, Risultato),
-    write(Risultato).
+ricerca:-
+    iniziale(S0),
+    valutazione(S0, [], Soglia),
 
-wrapperIdaStar(_, _, Path, _, Path).
-wrapperIdaStar(Corrente, Soglia, Path, Visitati, Risultato):-
-    idaStar(Corrente, Soglia, Path, Visitati, NuovaSoglia),
-    wrapperIdaStar(Corrente, NuovaSoglia, Path, Visitati, Risultato).
+    limite(Limite),
+    assert(euristicaMinima(Limite)), %alla prima iterazione non mi serve salvare Soglia
+                                    %quindi inserisco direttamente limite per permettere i confronti 
+                                    %dei minimi locali (vedi piu' avanti per maggiore chiarezza)
 
+    write('Soglia iniziale: '), write(Soglia), write('\n'),
+    write('Limite: '), write(Limite), write('\n'),
 
-idaStar(Corrente, Soglia, Path, Visitati, NextSoglia):-
-    length(Path, Lunghezza),
-    Lunghezza =< Soglia,!,
-    findall(Azione, applicabile(Corrente, Azione), Azioni),
-    generaStati(Corrente, Azioni, Visitati, NuovoStato, Azione, CostoEuristica),
-    NextSoglia is Lunghezza + CostoEuristica, %% f = g+h
-    idaStar(NuovoStato, Soglia, [Azione | Path], Visitati, NextSoglia).
-
-generaStati(_, [], _, _, _, _).
-generaStati(Corrente, [Azione | CodaAzioni ], Visitati, NuovaPozisione, Azione, CostoEuristica):-
-    trasforma(Azione, Corrente, NuovaPozisione),
-    \+member(NuovaPozisione, Visitati), !,
-    valutazione(NuovaPozisione, [], CE),
-    CostoEuristica1 is min(CostoEuristica, CE),
-    generaStati(Corrente, CodaAzioni, [NuovaPozisione | Visitati], NuovaPozisione, Azione, CostoEuristica1).
+    wrapperRicProf(S0, Soglia, Cammino),
     
+    write('\nIl risultato e' ), write(Cammino), write('\n '), 
+    write('La lunghezza e '), length(Cammino, Int), write(Int),
+    visualizza_labirinto.
 
 
+%%CASO BASE
+wrapperRicProf(StatoIniziale, Soglia, Cammino):- ric_prof(StatoIniziale, Soglia, [], Cammino), !.
+
+%%CASO DI FALLIMENTO, AGGIORNAMENTO DELLA SOGLIA
+wrapperRicProf(StatoIniziale, _, Cammino):-
+    euristicaMinima(NuovaSoglia),    
+    write('\nNuova Soglia: '), write(NuovaSoglia),write('\n'),
+    limite(Limite),
+    Limite > NuovaSoglia,!,
+
+    retractall(euristicaMinima(_)),
+    assert(euristicaMinima(Limite)), %Dopo aver settato la soglia devo permettere alla prossima
+                                    %iterazione di trovarmi il nuovo minimo LOCALE che pero´sara maggiore
+                                    %della soglia, quindi una volta salvata la soglia per l' iterazione
+                                    %setto euristicaMinima al massimo cosi' che potro' salvarmi
+                                    %il nuovo minimo (mi serve principalmente per il primo confronto)
+    wrapperRicProf(StatoIniziale, NuovaSoglia, Cammino).
 
 
+%% CASO BASE
+ric_prof(S, _, _, []):- 
+    finale(S),!.
 
+%caso in cui la soglia e' 0 quindi bisogna aggiornare la soglia
+%ho capito che la soglia deve tenere in considerazione solo i nodi terminali (quindi Soglia=0)
+%andava in loop perche' giustamente la soglia minima e' sempre quella dello start
+ric_prof(Corrente, 0, Visitati, _):- !,
+    valutazione(Corrente, Visitati, Risultato),
+    euristicaMinima(Minimo),
+    retractall(euristicaMinima(_)),
+    NuovoMinimo is min(Minimo, Risultato),
+    assert(euristicaMinima(NuovoMinimo)),
+    fail.
 
+%% PASSO INDUTTIVO
+ric_prof(Corrente, Soglia, Visitati, [NuovaAzione | SeqAzioni]):-
+    Soglia > 0,!,
+    \+member(Corrente, Visitati),!,
+    applicabile(NuovaAzione, Corrente), 
+    trasforma(NuovaAzione, Corrente, NuovoStato),
+
+    NuovaSoglia is Soglia -1,
+    ric_prof(NuovoStato, NuovaSoglia, [Corrente | Visitati], SeqAzioni).
