@@ -1,10 +1,10 @@
 clingo version 5.7.1
-Reading from campionato.cl
+Reading from campionatoRamiro.cl
 Solving...
 UNKNOWN
 
 INTERRUPTED  : 1
 Models       : 0+
 Calls        : 1
-Time         : 840.849s (Solving: 840.34s 1st Model: 0.00s Unsat: 0.00s)
-CPU Time     : 635.786s
+Time         : 21.387s (Solving: 20.82s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 21.109s

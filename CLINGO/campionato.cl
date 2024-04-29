@@ -27,17 +27,17 @@ citta(udinese,udine).
 1{partita(S1, S2, G): giornata(G)}1:- squadra(S1), squadra(S2), S1!=S2.
 
 %OGNI GIORNATA VENGONO GIOCATE 10 PARTITE
-10{partita(S1, S2, G): squadra(S1), squadra(S2)}10:- giornata(G).
+%10{partita(S1, S2, G): squadra(S1), squadra(S2)}10:- giornata(G).
 
 
 %OGNI SQUADRA GIOCA UNA E UNA SOLA PARTITA A SETTIMANA
 :-partita(S1, S2, G), partita(S1, S3, G), S2!=S3. 
 :-partita(S1, S2, G), partita(S3, S2, G), S1!=S3.
-:-partita(S1, _, G), partita(_, S1, G).
+:-partita(S1, _, G), partita(_, S2, G), S1 == S2.
 
 %NON POSSO GIOCARE DUE PARTITE NELLO STESSO STADIO
-:- partita(S1, S3, G), partita(S2, S4, G), citta(S1, C), citta(S2, C), S1 != S2. %versione alternativa
-%:- partita(S1, _, G), partita(S2, _, G), S1 != S2, citta(S1, C), citta(S2, C).
+%:- partita(S1, S3, G), partita(S2, S4, G), citta(S1, C), citta(S2, C), S1 != S2. %versione alternativa
+:- partita(S1, _, G), partita(S2, _, G), S1 != S2, citta(S1, C), citta(S2, C).
 
 
 
