@@ -26,9 +26,6 @@ citta(udinese,udine).
 %TUTTE LE SQUADRE GIOCANO CON TUTTE LE SQUADRE UNA E UNA SOLA VOLTA
 1{partita(S1, S2, G): giornata(G)}1:- squadra(S1), squadra(S2), S1!=S2.
 
-%OGNI GIORNATA VENGONO GIOCATE 10 PARTITE
-%10{partita(S1, S2, G): squadra(S1), squadra(S2)}10:- giornata(G).
-
 
 %OGNI SQUADRA GIOCA UNA E UNA SOLA PARTITA A SETTIMANA
 :-partita(S1, S2, G), partita(S1, S3, G), S2!=S3. 
