@@ -35,6 +35,10 @@ citta(udinese,udine).
 %NON POSSO GIOCARE DUE PARTITE NELLO STESSO STADIO
 :- partita(S1, _, G), partita(S2, _, G), S1 != S2, citta(S1, C), citta(S2, C).
 
+%DUE SQUADRE NON SI SFIDANO DUE VOLTE NELLO STESSO GIRONE
+:- partita(S1, S2, G1), partita(S2, S1, G2), G1 <= 19, G2 <= 19.
+:- partita(S1, S2, G1), partita(S2, S1, G2), G1 > 19, G2 > 19.
+
 
 
 #show partita/3.
