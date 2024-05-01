@@ -12,6 +12,12 @@ citta(salernitana,salerno).
 citta(bologna,bologna_c).
 citta(cagliari,cagliari_c).
 citta(empoli,empoli_c).
+citta(torino,torino_c).
+citta(lazio,roma_c).
+citta(salernitana,salerno).
+citta(bologna,bologna_c).
+citta(cagliari,cagliari_c).
+citta(empoli,empoli_c).
 citta(fiorentina,firenze).
 citta(frosinone,frosinone_c).
 citta(genoa,genova_c).
@@ -22,6 +28,7 @@ citta(lecce,lecce_c).
 citta(monza,monza_c).
 citta(sassuolo,sassuolo_c).
 citta(udinese,udine).
+
 
 %TUTTE LE SQUADRE GIOCANO CON TUTTE LE SQUADRE UNA E UNA SOLA VOLTA
 1{partita(S1, S2, G): giornata(G)}1:- squadra(S1), squadra(S2), S1!=S2.
@@ -38,6 +45,16 @@ citta(udinese,udine).
 %DUE SQUADRE NON SI SFIDANO DUE VOLTE NELLO STESSO GIRONE
 :- partita(S1, S2, G1), partita(S2, S1, G2), G1 <= 19, G2 <= 19.
 :- partita(S1, S2, G1), partita(S2, S1, G2), G1 > 19, G2 > 19.
+
+%%FACOLTATIVI 22/23
+%TESTATO FINO A 18 SQUADRE
+
+%UNA SQUADRA NON PUO' GIOCARE DUE PARTITE CONSECUTIVE IN CASA O FUORI
+:- partita(S, _, G1), partita(S, _, G2), partita(S, _, G3), G3 == G2+1, G2 == G1+1.
+:- partita(_, S, G1), partita(_, S, G2), partita(_, S, G3), G3 == G2+1, G2 == G1+1.
+
+%DUE SQUADRE NON POSSONO GIOCARE IL RITORNO PRIMA DI 10 GIORNATE DALL' ANDATA
+:- partita(S1, S2, G1), partita(S2, S1, G2), G2> G1, G2 < G1+10. 
 
 
 
