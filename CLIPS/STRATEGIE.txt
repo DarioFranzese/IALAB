@@ -1,0 +1,22 @@
+Strategia dummie Dario:
+
+Siano ABCD EFGH i colori:
+-Parti con ABCD
+-Prosegui con BCDE
+-Per ogni step da qui in poi (prendo in esempio questo step, il pattern e' fisso):
+  Se il numero di pegs aumenta, A e' nella soluzione e E non e' nella soluzione (ge
+  Se il numero di pegs diminuisce, A non e' nella solzione e E e' nella soluzione
+  Se Il numero di pegs non cambia salvo la coppia A-E
+-Proseguo cosi' fino a DEFG
+-Qui posso avere 2 alternative:
+  Ho trovato 3 colori giusti, me ne restano 2 da testare, vado ad esclusione e cambio fase
+  Ho solo due colori, proseguo
+-Proseguo con EFGH (in questo momento ho almeno una coppia)
+-Qui posso avere due alternative
+  Ho 3 colori e una coppia, vado ad esclusione
+  Ho 2 colori e due coppie, provo uno dei 4 colori delle 2 coppie: se e' buono e' buono anche
+  l' altro della coppia, scarto gli altri, viceversa se non e' buono.
+-Cambio fase
+--Dopo ogni guess aggiorno le posizioni come segue:
+  Se ho solo MISPLACED, tolgo le posizioni correnti di ogni colore dai loro domini
+  Se ho solo RIGHTPLACE, lascio SOLO le posizionic correnti di ogni colo nei loro domini
