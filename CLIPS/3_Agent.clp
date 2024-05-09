@@ -55,7 +55,7 @@
   (test (member$ ?colore4 $?presenti))
 
 =>
-  (printout t "Il codice segreto e' " ?colore1 ?colore2 ?colore3 ?colore4 crlf)
+  (printout t "Il codice segreto e' " ?colore1 " " ?colore2 " " ?colore3 " " ?colore4 crlf)
   (assert (guess (step ?s) (g ?colore1 ?colore2 ?colore3 ?colore4)))
   (pop-focus)
 )
@@ -67,6 +67,7 @@
   (colori-testati (presenti $? ?c1 $?) (assenti $?aPrima ? $?aDopo)) ;; sta sintassi serve solo per costruire il guess
   ?pp <- (possibili-posizioni (colore ?c1) (posizioni ?p1 $?dopo1))
   (test (> (length$ $?dopo1) 0)) ;voglio solo candidati che hanno almeno 2 posizioni testabili
+
   (test (eq (length$ $?aPrima) (- ?p1 1))) ;sintassi per dire che voglio mettere ?c1 in posizione ?p1
   (test (eq (length$ $?aDopo) (- 4 ?p1)))
 =>
@@ -102,7 +103,7 @@
 =>
 
   (assert (guess (step 9) (g ?c1 ?c2 ?c3 ?c4)))
-  (printout t "L'ultima risposta e' " ?c1 ?c2 ?c3 ?c4)
+  (printout t "L'ultima risposta e' " ?c1 " " ?c2 " " ?c3 " " ?c4)
   (pop-focus)
 )
 
@@ -119,7 +120,7 @@
   ?pp <- (possibili-posizioni (colore ?c2) (posizioni $?prima ?p1 $?dopo))
 
 =>
-  (modify ?pp (posizioni (delete-member$ $?prima $?dopo))) 
+  (modify ?pp (posizioni $?prima $?dopo)) 
 );questa regola si attivera' piu' volte anche in fase di ordinamento, e' molto potente
 
 (defrule aggiorna-posizioni-rp (declare (salience 10));in questo caso abbiamo trovato solo rightplaced
@@ -127,7 +128,7 @@
                                                       ;in maniera "errata" i colori assenti ma non ci interessa
   (status (step ?s) (mode computer))
   (answer (step ?s1&:(eq (- ?s 1) ?s1)) (right-placed ?rp) (miss-placed 0))
-  (test(> ?rp 0)) ;da controllare sta sintassi la sto facendo al volo cosi' al meno si capisce la logica
+  (test(> ?rp 0))
 
   (guess (step ?s1&:(eq (- ?s 1) ?s1)) (g ?primo ?secondo ?terzo ?quarto))
   ?fatto1 <- (possibili-posizioni (colore ?primo)) 
@@ -167,28 +168,28 @@
 
 ;;REGOLE DI AGGIORNAMENTO DEI COLORI PRESENTI/ASSENTI
 
-(defrule aggiorna-colori-veloce-positivo (declare (salience 7)) ;se sono nel caso "veloce", se ho 4 rp significa che l' ultimo colore aggiunto e' corretto (e' sempre black)
+(defrule aggiorna-colori-veloce-positivo (declare (salience 8)) ;se sono nel caso "veloce", se ho 4 rp significa che l' ultimo colore aggiunto e' corretto (e' sempre yellow)
   ?fase<-(fase (nome ricerca)) 
   (status (step ?s) (mode computer))
   (test(> ?s 1))
   ?testati<-(colori-testati (presenti $?presenti))
   (test(eq (length$ $?presenti) 3))
   
-  (answer (step ?s1&:(eq (- ?s 1) ?s1)) (right-placed ?rp))
-  (test (eq ?rp 4))
+  (answer (step ?s1&:(eq (- ?s 1) ?s1)) (miss-placed ?mp) (right-placed ?rp))
+  (test (eq 4 (+ ?mp ?rp)))
 =>
   (modify ?testati(presenti $?presenti yellow)) ;non ho aggiunto purple agli assenti perche' e' inutile 
 )
 
-(defrule aggiorna-colori-veloce-negativo (declare (salience 7))
+(defrule aggiorna-colori-veloce-negativo (declare (salience 8))
   ?fase<-(fase (nome ricerca)) 
   (status (step ?s) (mode computer))
   (test(> ?s 1))
   ?testati<-(colori-testati (presenti $?presenti))
   (test(eq (length$ $?presenti) 3))
   
-  (answer (step ?s1&:(eq (- ?s 1) ?s1)) (right-placed ?rp))
-  (test (eq ?rp 3))
+  (answer (step ?s1&:(eq (- ?s 1) ?s1)) (miss-placed ?mp) (right-placed ?rp))
+  (test (eq 3 (+ ?mp ?rp)))
 =>
   (modify ?testati(presenti $?presenti purple)) 
 )
@@ -197,7 +198,7 @@
   (fase (nome ricerca)) 
   (status (step ?s) (mode computer))
   (test(> ?s 1))
-  (answer (step ?s1&:(eq (- ?s 1) ?s1)) (right-placed ?rp1) (miss-placed ?mp1))
+  (answer (step ?s1&:(eq (- ?s 1) ?s1)) (right-placed ?rp1) (miss-placed ?mp1)) ;;prendi gli ultimi due guess fatti
   (answer (step ?s2&:(eq (- ?s 2) ?s2)) (right-placed ?rp2) (miss-placed ?mp2))
   (test(> (+ ?rp1 ?mp1) (+ ?rp2 ?mp2)))
 
@@ -258,6 +259,7 @@
   
   (answer (step ?s1&:(eq (- ?s 1) ?s1)) (right-placed ?rp) (miss-placed ?mp))
   (test (eq 3 (+ ?rp ?mp)))
+
   (guess (step ?s1&:(eq (- ?s 1) ?s1)) (g ? ? ? ?buono))
   (coppia (colori ?buono ?colore2)) ;prendo l' altro colore della coppia
   ?testati <- (colori-testati (presenti $?p))
@@ -292,7 +294,7 @@
 
   ?testati <- (colori-testati (presenti ?p1 ?p2 ?p3 ?p4))
 =>
-  (printout t  "I colori sono: " ?p1 ?p2 ?p3 ?p4 crlf)
+  (printout t  "I colori sono: " ?p1 " " ?p2 " " ?p3 " " ?p4 crlf)
 
   (modify ?testati (assenti (delete-member$ $?colori ?p1 ?p2 ?p3 ?p4)))
   (modify ?fase (nome ordinamento))
@@ -347,9 +349,7 @@
   (status (step 1) (mode computer))
   (fase (nome ricerca))
 =>
-  (assert(guess (step 1) (g green red yellow orange))) ;se si vuole fare una roba piu' elegante si puo' usare  
-                                                     ;una sintassi simile a quella del bro con l' indice bla bla
-                                                     ;secondo me abbastanza inutile onestamente
+  (assert(guess (step 1) (g green red yellow orange)))
   (pop-focus)
 )
 
@@ -372,14 +372,14 @@
 (defrule ricerca-4-veloce (declare (salience 5)) ;deve partire dopo l'update ma prima di ricerca-4
                                                  ;questo e' il caso fortunato in cui arrivo allo step 4
                                                  ;con 3 presenti e 3 assenti. Ne provo uno, se fallisce e' l' altro
-                                                 ;in particolare provo con black, altrimenti e' purple
+                                                 ;in particolare provo con yellw, altrimenti e' purple
   (status (step 4) (mode computer))
   (fase (nome ricerca))
   (colori-testati (presenti $?presenti))
   (test(eq (length$ $?presenti) 3))
 =>
   (assert(guess (step 4) (g $?presenti yellow))) ;ci sara' un aggiorna-testati-veloce che controlla che allo step 3 presenti
-                                              ;avesse lunghezza 3 (e anche questo avra' salience 5)
+                                                 ;avesse lunghezza 3 (e anche questo avra' salience 5)
   (pop-focus)
 )
 
@@ -395,11 +395,11 @@
 (defrule ricerca-coppie-2
   (status (step 5) (mode computer))
   (fase (nome ricerca))
-  (coppia (colori ?c1 ?c2))
+  (coppia (colori ?c1 ?))
   (coppie-counter (counter 2)) ;devo avere 2 coppie
-  (colori-testati (presenti ?a ?b $?) (assenti ?c $?))
+  (colori-testati (presenti ?p1 ?p2 $?) (assenti ?a $?))
 =>
-  (assert(guess (step 5) (g ?a ?b ?c ?c1)))
+  (assert(guess (step 5) (g ?p1 ?p2 ?a ?c1)))
   (pop-focus)
 )
 
@@ -427,6 +427,7 @@
 
 (defrule ricerca-coppie-4-proseguimento (declare (salience 8));sono tornato da ricerca-coppie-4-lento
                                                               ;significa che le coppie 2 e 3 hanno lo stesso valore
+                                                              ;ultima ricerca possibile, avro' per forza 0/4 pegs e cambiero' fase automaticamente
   (status (step 7) (mode computer))
   (fase (nome ricerca))
   (coppie-counter (counter 4))
