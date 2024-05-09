@@ -4,3 +4,4 @@
 (load 2_Code.clp)
 (load 3_Agent.clp)
 (reset)
+(watch rules)

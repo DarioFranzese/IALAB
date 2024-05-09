@@ -294,7 +294,7 @@
 
   ?testati <- (colori-testati (presenti ?p1 ?p2 ?p3 ?p4))
 =>
-  (printout t  "I colori sono: " ?p1 " " ?p2 " " ?p3 " " ?p4 crlf)
+  (printout t  "(" ?s ") I colori sono: " ?p1 " " ?p2 " " ?p3 " " ?p4 crlf)
 
   (modify ?testati (assenti (delete-member$ $?colori ?p1 ?p2 ?p3 ?p4)))
   (modify ?fase (nome ordinamento))
