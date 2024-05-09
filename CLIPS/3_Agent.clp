@@ -109,11 +109,49 @@
   (pop-focus)
 )
 
+;ottimizzazione 
+(defrule aggiorna-posizioni-rp-ordinamento (declare (salience 10)) ;nella fase di ordinamento, se trovo la posizione corretta del colore, la tolgo agli altri
+  (status (step ?s) (mode computer))
+  (fase (nome ordinamento))
+  (answer (step ?s1&:(eq (- ?s 1) ?s1)) (right-placed 1))
+
+  (colori-testati (presenti $?presenti))
+
+  (guess (step ?s1&:(eq (- ?s 1) ?s1)) (g $?prima1 ?c1 $?dopo1))
+  (member$ ?c1 $?presenti) ;prendi l' unico colore del guess che e' nella soluzione
+  
+
+  (colori-testati (presenti $?prima2 ?c2 $?dopo2)) 
+  (colori-testati (presenti $?prima3 ?c3 $?dopo3))
+  (colori-testati (presenti $?prima4 ?c4 $?dopo4))
+
+  (test (neq ?c2 ?c1))
+  (test (neq ?c2 ?c3))
+  (test (neq ?c2 ?c4))
+
+  (test (neq ?c3 ?c1))
+  (test (neq ?c3 ?c4))
+
+  (test (neq ?c4 ?c1))
+
+  ?pp1 <- (possibili-posizioni (colore ?c1))
+  ?pp2 <- (possibili-posizioni (colore ?c2) (posizioni $?p2))
+  ?pp3 <- (possibili-posizioni (colore ?c3) (posizioni $?p3))
+  ?pp4 <- (possibili-posizioni (colore ?c4) (posizioni $?p4))
+=>
+
+  (modify ?pp1 (posizioni (+ 1 (length$ $?prima1)))) ;il colore della soluzione puo' stare solo nella posizione attuale
+  (modify ?pp2 (posizioni (delete-member$ $?p2 (+ 1 (length$ $?prima1))))) ;a tutti gli altri presenti vanno tolte le posizioni
+  (modify ?pp3 (posizioni (delete-member$ $?p3 (+ 1 (length$ $?prima1)))))
+  (modify ?pp4 (posizioni (delete-member$ $?p4 (+ 1 (length$ $?prima1)))))
+)
+
 
 ;;REGOLE DI AGGIORNAMENTO DELLE POSIZIONI
 
 (defrule aggiorna-posizioni-rp (declare (salience 10));in questo caso abbiamo trovato solo rightplaced
   (status (step ?s) (mode computer))
+  (fase (nome ricerca)) ;nella fase di ordinamento c' e' una variante
   (answer (step ?s1&:(eq (- ?s 1) ?s1)) (right-placed ?rp) (miss-placed ?mp))
   (test(eq ?mp 0))
   (test(> ?rp 0)) ;da controllare sta sintassi la sto facendo al volo cosi' al meno si capisce la logica
