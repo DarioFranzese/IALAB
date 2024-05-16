@@ -1,5 +1,3 @@
-
-
 valutazione(StatoCorrente, Path, Risultato):- 
     distanzaMinima(StatoCorrente, Distanza),
     length(Path, Lunghezza),

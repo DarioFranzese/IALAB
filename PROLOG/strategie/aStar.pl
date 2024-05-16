@@ -1,4 +1,4 @@
-:- ['../labirinti/hard15x15'], ['../utility'], ['../azioni'], ['../visualizza'].
+:- ['../labirinti/labirinto1280x1280'], ['../utility'], ['../azioni'], ['../visualizza'].
 
 ricerca:-
     iniziale(Start),
@@ -25,7 +25,7 @@ aStar([Corrente, Path, Valutazione], Frontiera, Visitati, Risultato):-
 
 %checkVisitati prende in input le azioni e gli stati visitati, genera i nuovi stati (in base alle azioni disponibili) e controlla che
 %questi non siano gia' stati visitati. Ritorna in output i nuovi stati non visitati e il nuovo set di visitati (dove sono stati aggiunti questi ultimi)
-%di fatti i nodi vengono marcati come visitati appena vengono scoperti (e quindi aggiunti in frontiera)
+%di fatti i nodi vengono marcati come visitati appena vengono scoperti (e quindi aggiunti ai visitati)
 
 %%CASO BASE
 checkVisitati(Visitati, _, [], NuoviStati, NuoviStati, Visitati). %nuovi stati contiene coppie (posizione,azione)
@@ -49,7 +49,6 @@ generaStati(Corrente, Path, Valutazione, [[NuovoStato, Azione] | CodaNuoviStati]
     valutazione(NuovoStato, Path, NuovaValutazione),
     inserimentoOrdinato(NuovoStato, [Azione|Path], NuovaValutazione, Frontiera, Risultato),
     generaStati(Corrente, Path, Valutazione, CodaNuoviStati, Risultato, NuovaFrontiera).
-
 
 
 

@@ -4,8 +4,8 @@
   ;(secret-code (code purple green white yellow)) ; 4 coppie lento 8 step
   ;(secret-code (code black purple orange blue)) ;2 coppie 8 step
   ;(secret-code (code white black green purple)) ;2 coppie 9 step
-  (secret-code (code  green purple white yellow))
+  ;(secret-code (code  green purple white yellow))
   
-  ;(random)
+  (random)
  )
 

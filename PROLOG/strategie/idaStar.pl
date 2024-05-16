@@ -19,6 +19,7 @@ ricerca:-
     visualizza_labirinto.
 
 
+
 %%CASO BASE
 wrapperRicProf(StatoIniziale, Soglia, Cammino):- ric_prof(StatoIniziale, Soglia, [], Cammino), !.
 
@@ -36,6 +37,8 @@ wrapperRicProf(StatoIniziale, _, Cammino):-
                                     %setto euristicaMinima al massimo cosi' che potro' salvarmi
                                     %il nuovo minimo (mi serve principalmente per il primo confronto)
     wrapperRicProf(StatoIniziale, NuovaSoglia, Cammino).
+
+
 
 
 %% CASO BASE

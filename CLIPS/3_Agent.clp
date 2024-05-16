@@ -17,7 +17,7 @@
   (multislot assenti (allowed-values blue green red yellow orange white black purple) (cardinality 0 4))
 )
 
-(deftemplate coppia ;coppia che salvo nel caso in cui nei primi 5 step non ho trovato tutti i colori presenti
+(deftemplate coppia ;coppia che salvo nel cason in cui nei primi 5 step non ho trovato tutti i colori presenti
   (slot id (type INTEGER))
   (multislot colori (allowed-values blue green red yellow orange white black purple) (cardinality 2 2))
 )
@@ -149,9 +149,8 @@
                         ;questa cosa si potrebbe evitare ma andrebbero cambiate le precondizioni di questa regola perche' quando sono in ordinamento
                         ;ignoro totalmente le posizioni possibili degli assenti e quindi potrebbero non matchare qui gli antecedenti
                         ;Ad ogni modo la posizione la rimuoviamo gia' nel conseguente della regola prova-posizione quindi sarebbe inutile
-  (answer (step ?s1&:(eq (- ?s 1) ?s1)) (right-placed ?rp) (miss-placed ?mp))
+  (answer (step ?s1&:(eq (- ?s 1) ?s1)) (right-placed 0) (miss-placed ?mp))
   (test(> ?mp 0))
-  (test(eq ?rp 0)) 
   (guess (step ?s1&:(eq (- ?s 1) ?s1)) (g ?primo ?secondo ?terzo ?quarto))
   
   ?fatto1 <- (possibili-posizioni (colore ?primo) (posizioni 1 $?dopo1)) 
@@ -168,27 +167,13 @@
 
 ;;REGOLE DI AGGIORNAMENTO DEI COLORI PRESENTI/ASSENTI
 
-(defrule aggiorna-colori-veloce-positivo (declare (salience 8)) ;se sono nel caso "veloce", se ho 4 rp significa che l' ultimo colore aggiunto e' corretto (e' sempre yellow)
+(defrule aggiorna-colori-veloce-negativo (declare (salience 8)) ;nel caso positivo fa partire ricerca-pegs-4
   ?fase<-(fase (nome ricerca)) 
-  (status (step ?s) (mode computer))
-  (test(> ?s 1))
+  (status (step 5) (mode computer)) ;deve partire allo step 5
   ?testati<-(colori-testati (presenti $?presenti))
   (test(eq (length$ $?presenti) 3))
   
-  (answer (step ?s1&:(eq (- ?s 1) ?s1)) (miss-placed ?mp) (right-placed ?rp))
-  (test (eq 4 (+ ?mp ?rp)))
-=>
-  (modify ?testati(presenti $?presenti yellow)) ;non ho aggiunto purple agli assenti perche' e' inutile 
-)
-
-(defrule aggiorna-colori-veloce-negativo (declare (salience 8))
-  ?fase<-(fase (nome ricerca)) 
-  (status (step ?s) (mode computer))
-  (test(> ?s 1))
-  ?testati<-(colori-testati (presenti $?presenti))
-  (test(eq (length$ $?presenti) 3))
-  
-  (answer (step ?s1&:(eq (- ?s 1) ?s1)) (miss-placed ?mp) (right-placed ?rp))
+  (answer (step 4) (miss-placed ?mp) (right-placed ?rp))
   (test (eq 3 (+ ?mp ?rp)))
 =>
   (modify ?testati(presenti $?presenti purple)) 
