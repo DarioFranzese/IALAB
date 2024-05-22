@@ -17,10 +17,10 @@ checkAvversario(_, R, C):- finale(pos(R, C)).
 checkAvversario(nord, R, C):- avversario(pos(R, C)), fail.
 
 %CHIAMATE RICORSIVE PER PROSEGUIRE LA RICERCA
-checkAvversario(nord, R, C):- checkAvversario(nord, R-1, C).
-checkAvversario(sud, R, C):- checkAvversario(nord, R+1, C).
-checkAvversario(est, R, C):- checkAvversario(nord, R, C+1).
-checkAvversario(ovest, R, C):- checkAvversario(nord, R, C-1). 
+checkAvversario(nord, R, C):- NR is R-1, checkAvversario(nord, NR, C).
+checkAvversario(sud, R, C):- NR is R+1, checkAvversario(nord, NR, C).
+checkAvversario(est, R, C):- NC is C+1, checkAvversario(nord, R, NC).
+checkAvversario(ovest, R, C):- NC is C-1, checkAvversario(nord, R, NC). 
 
 
 
@@ -33,49 +33,57 @@ applicabile(Azione, pos(R, C), Martello):-
 %IL TERZO PARAMETRO E' IL MARTELLO (0=NO, 1=SI)
 applicabile_2(nord, pos(R, C), 1):- %trovo il ghiaccio ma ho il martello
     R>1,
-    my_ghiaccio(pos(R-1, C)). %trovo il ghiaccio ma posso romperlo
+    NR is R-1,
+    my_ghiaccio(pos(NR, C)). %trovo il ghiaccio ma posso romperlo
 
 
 applicabile_2(nord, pos(R,C), _):- 
     R > 1,
-    \+occupata(pos(R-1,C)),
-    \+my_ghiaccio(pos(R-1,C)), %QUESTA CONDIZIONE NON E' PROBLEMATICA SE HO IL MARTELLO PERCHE' NON POSSONO AVVENIRE ASSIEME ALL' INTERNO DI
+    NR is R-1, 
+    \+occupata(pos(NR,C)),
+    \+my_ghiaccio(pos(NR,C)), %QUESTA CONDIZIONE NON E' PROBLEMATICA SE HO IL MARTELLO PERCHE' NON POSSONO AVVENIRE ASSIEME ALL' INTERNO DI
                                %DI QUESTO PREDICATO SICCOME VIENE CONTROLLATO PRIMA IL PRECEDENTE, QUINDI SE IL MARTELLO E' 1 DEVE CONTROLALRE SOLO LE ALTRE 2 
-    \+my_gemma(pos(R-1,C)).
+    \+my_gemma(pos(NR,C)).
 
 %SUD
 applicabile_2(sud, pos(R,C), 1):-
     num_righe(N),
     R < N,
-    my_ghiaccio(pos(R+1, C)).
+    NR is R+1,
+    my_ghiaccio(pos(NR, C)).
 
 applicabile_2(sud, pos(R,C), _):-
     num_righe(N),
     R < N,
-    \+occupata(pos(R+1, C)),
-    \+my_ghiaccio(pos(R+1, C)),
-    \+my_gemma(pos(R+1, C)).
+    NR is R+1,
+    \+occupata(pos(NR, C)),
+    \+my_ghiaccio(pos(NR, C)),
+    \+my_gemma(pos(NR, C)).
 
 %EST
 applicabile_2(est, pos(R,C), 1):-
     num_colonne(N),
     C < N,
-    my_ghiaccio(pos(R, C+1)).
+    NC is N+1,
+    my_ghiaccio(pos(R, NC)).
 
 applicabile_2(est, pos(R,C), _):-
     num_colonne(N),
     C < N,
-    \+occupata(pos(R, C+1)),
-    \+my_ghiaccio(pos(R, C+1)),
-    \+my_gemma(pos(R, C+1)).
+    NC is C+1,
+    \+occupata(pos(R, NC)),
+    \+my_ghiaccio(pos(R, NC)),
+    \+my_gemma(pos(R, NC)).
 
 %OVEST
 applicabile_2(ovest, pos(R,C), 1):-
     C > 1,
-    my_ghiaccio(pos(R, C-1)).
+    NC is C-1,
+    my_ghiaccio(pos(R, NC)).
 
 applicabile_2(ovest, pos(R,C), _):-
     C > 1,
-    \+occupata(pos(R, C-1)),
-    \+my_ghiaccio(pos(R, C-1)),
-    \+my_gemma(pos(R, C-1)).
+    NC is C-1,
+    \+occupata(pos(R, NC)),
+    \+my_ghiaccio(pos(R, NC)),
+    \+my_gemma(pos(R, NC)).
