@@ -19,6 +19,8 @@ occupata(pos(8,3)).
 
 finale(pos(4,8)).
 
+
+%QUESTE VANNO INTERPRETATE COME POSIZIONI INIZALI, PERTANTO VERRANO USATI ALTRI PREDICATI "LOCALI" my_gemma, my_ghiaccio e my_martello
 gemma(pos(1,7)).
 gemma(pos(5,4)).
 gemma(pos(8,8)).

@@ -1,4 +1,4 @@
-:- ['../labirinti/labirinto1280x1280'], ['../utility'], ['../azioni'], ['../visualizza'].
+:- ['../labirinti/labirinto1280x1280'], ['../utility'], ['../azioni'], ['../../visualizza'].
 
 ricerca:-
     iniziale(Start),
