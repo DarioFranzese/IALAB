@@ -2,7 +2,7 @@ checkUscita:-
     iniziale(S0),
     dfs(S0, _, []),!.
 
-checkUscita:- write('Dobbiamo prima recuperare il martello'), write('\n'), assert(priorityartello(1)).
+checkUscita:- write('Dobbiamo prima recuperare il martello'), write('\n'), assert(priorityartello(1)). %ci mette al piu' 11 secondi sul pc di Dario
 
 
 dfs(S, [], _):-finale(S), !. 
@@ -40,7 +40,7 @@ applicabileCU(ovest, pos(Riga, Colonna)):-
     \+ghiaccio(pos(Riga, ColonnaPrecedente)).
     
 
-    trasformaCU(est, pos(Riga, Colonna), pos(Riga, NuovaColonna)):- NuovaColonna is Colonna+1.
-    trasformaCU(ovest, pos(Riga, Colonna), pos(Riga, NuovaColonna)):- NuovaColonna is Colonna-1.
-    trasformaCU(sud, pos(Riga, Colonna), pos(NuovaRiga, Colonna)):- NuovaRiga is Riga+1.
-    trasformaCU(nord, pos(Riga, Colonna), pos(NuovaRiga, Colonna)):- NuovaRiga is Riga-1.
+trasformaCU(est, pos(Riga, Colonna), pos(Riga, NuovaColonna)):- NuovaColonna is Colonna+1.
+trasformaCU(ovest, pos(Riga, Colonna), pos(Riga, NuovaColonna)):- NuovaColonna is Colonna-1.
+trasformaCU(sud, pos(Riga, Colonna), pos(NuovaRiga, Colonna)):- NuovaRiga is Riga+1.
+trasformaCU(nord, pos(Riga, Colonna), pos(NuovaRiga, Colonna)):- NuovaRiga is Riga-1.

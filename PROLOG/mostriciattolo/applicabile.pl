@@ -29,8 +29,6 @@ checkAvversario(ovest, R, C, Movibili):- NC is C-1, \+member(avversario(pos(R, N
 
 
 
-
-
 %Daro' per scontato che il martello e' sempre il primo elemento della lista dei movibili, se questo non dovesse accadere vanno cambiati i due predicati che anziche' usare Movibili usano la lista esplicita
 %con il martello in testa
 applicabile(nord, pos(R, C), Movibili):-
