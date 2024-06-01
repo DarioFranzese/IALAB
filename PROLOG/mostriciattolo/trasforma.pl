@@ -1,7 +1,15 @@
-%LA QUARTA VARIABILE E' IL MARTELLO
 
-%IL PREDICATO SPOSTA E' PENSATO PER QUANDO SI MUOVE L' AGENTE, TUTTAVIA SI PUO' UTILIZZARE ANCHE QUANDO SI MUOVONO LE ALTRE ENTITA', BASTA TRATTARLE COME
-%AGENTI SENZA MARTELLO (va solo capito che succede se finiscono sul finale o sul martello, dipende quanto vogliamo riutilizzare il codice)
+
+/*
+L' IDEA E' CHE TRASFORMA PRENDA IN INPUT LA POSIZIONE CORRENTE, I MOVIBILI E CHE ORDINI LA POSIZIONE DI TUTTI QUESTI IN MODO DA DETERMINARE L' ORDINE
+CON IL QUALE VENGONO CALCOLATI I SINGOLI SPOSTAMENTI. PER FARE CIO', IL PREDICATO DI SPOSTAMENTO HA SEMPRE I MOVIBILI PER CONOSCERE GLI OSTACOLI ETC. MA 
+INOLTRE PER CAPIRE QUALE POSIZIONE E' ASSOCIATA A CHE TIPO DI SOGGETTO SI STIA SPOSTANDO (OSTACOLO O CORRENTE) SI POSSONO FARE 4 WRAPPER (UNO PER OGNI TIPO DI MOVIBILE)
+DOVE 3 CHIAMERANNO UNA VERSIONE DI SPOSTA CHE CONSIDERA MARTELLO E GEMMA COME OSTACOLI, L' ALTRA (QUELLA IMPLEMENTATA DA MODIFICARE) E' PER L' AGENTE CHE QUINDI PUO' MODIFICARE I MOVIBILI (CHE DOVRANNO
+ESSERE LA QUARTA VARIABILE, STESSA MODIFICA FATTA IN APPLICABILE). QUESTA COSA UN PO' MACCHINOSA E' DOVUTA AL FATTO CHE L' ALTERNATIVA SAREBBE DUPLICARE OGNI
+PREDICATO DI SPOSTAMENTO PER OGNI TIPO DI OGGETTO (agente, avversario, gemma, martello) MENTRE INVECE COSI' FACENDO NE CREIAMO SOLO DUE (uno per l' agente e
+uno per gli ostacoli) CHE VERRANNO CHIAMATI DAL FAMOSO WRAPPER.
+A questi predicati quindi va cambiata l' ultima variabile in "Movibili" e aggiungerne una che sara' "NuoviMovibili"
+
 
 %CASO BASE IN CUI SONO ARRIVATO AL FINALE
 sposta(_, pos(R, C), pos(R, C), _):- finale(pos(R,C)).
@@ -9,7 +17,7 @@ sposta(_, pos(R, C), pos(R, C), _):- finale(pos(R,C)).
 %NORD
 
 %CASO BASE SONO ARRIVATO ALLA FINE DEL LABIRINTO
-sposta(nord, pos(1, C), pos(1, C), _).
+sposta(nord, pos(1, C), pos(1, C), Movibile).
 
 %CASO BASE SONO ARRIVATO AD UN OSTACOLO
 sposta(nord, pos(R,C), pos(R,C), 0):- NR is R-1, my_ghiaccio(pos(NR, C)).
@@ -103,7 +111,40 @@ sposta(ovest, pos(R, C), pos(RNuovo, CNuovo), 1):-
     retract(my_ghiaccio(pos(R, NC))), %DA CONTROLLARE QUESTA SINTASSI
     sposta(ovest, pos(R, NC), pos(RNuovo, CNuovo), 1).
 
-sposta(ovest, pos(R, C), pos(RNuovo, CNuovo), Martello):-
+sposta(ovest, pos(R, C), pos(RNuovo, CNuovo), Movibili):-
     NC is C-1,
-    sposta(ovest, pos(R, NC), pos(RNuovo, CNuovo), Martello).
+    sposta(ovest, pos(R, NC), pos(RNuovo, CNuovo), Movibili).
 
+*/
+
+trasforma(Azione, Corrente, Movibili, NuovoStato, NuoviMovibili):-
+    ordina(Azione, [corrente(Corrente) | Movibili], MovibiliOrdinati), %il predicato corrente verra' usato per identificare l' agente
+    sposta(Azione, MovibiliOrdinati, MovibiliOrdinati, _, NuovoStato, NuoviMovibili). %questo wrapper prendera' un movibile alla volta e lo spostera', restituendo poi i NuoviMovibili (potenzialmente prendiamo il martello
+                                                                        %oppure rompiamo il ghiaccio) e il nuovo stato dell' agente
+                                                                        %quello che sopra e' chiamato sposta sara' spostaAgente, andra' poi fatto spostaOggetto.
+                                                                        
+
+%CASO BASE
+sposta(_, [], NuoviMovibili, NuovoStato, NuovoStato, NuoviMovibiliSenzaCorrente):-  removeFromList(NuoviMovibili, corrente(_), NuoviMovibiliSenzaCorrente). %i NuoviMovibili hanno al loro interno anche il corrente
+                                                                                                                                                %ma noi non lo vogliamo quindi lo tolgo.
+                                                                                                                                                %In realta' questa cosa si potrebbe anche modificare lasciandolo
+                                                                                                                                                %sempre dentro. Sarebbe una copia del corrente non mi fa impazzire
+                                                                                                                                                %come cosa                                                                       
+
+sposta(Azione, [ corrente(X) | CodaMovibili], TempMov, _, NuovoStato, NuoviMovibili):-
+    spostaAgente(Azione, X, TempMov, NuovoStatoAgente, MovibiliPostAgente), %questo e' l'unico predicato che dovra' modificare NuovoStato
+    removeFromList(MovibiliPostAgente, corrente(X), NuovaCodaMovibili), %Movibili post agente sara' l' elenco dei movibili potenzialmente primo di ghiaccio e martello, tuttavia contiene ancora la posizione
+                                                                       %del corrente, che va quindi tolta per poi aggiungerci il nuovo corrente
+    sposta(Azione, CodaMovibili, [corrente(NuovoStato) | NuovaCodaMovibili], NuovoStatoAgente, NuovoStato, NuoviMovibili). %metto il corrente in testa tanto e' indifferente
+                                                                                                         %Occhio All' utilizzo di NuovoStato non mi convince
+
+
+sposta(Azione, [ gemma(X) | CodaMovibili], TempMov, TempNuovoStato, NuovoStato, NuoviMovibili):-
+    spostaOggetto(Azione, X, TempMov, NuovoStatoOggetto), %questo predicato non dovrebbe modificare i Movibili e quindi non ci deve dare in output un nuovo valore di TempMov
+    removeFromList(TempMov, gemma(X), NewTempMov),
+    sposta(Azione, CodaMovibili, [gemma(NuovoStatoOggetto) | NewTempMov], TempNuovoStato, NuovoStato, NuoviMovibili).
+
+sposta(Azione, [ avversario(X) | CodaMovibili], TempMov, TempNuovoStato, NuovoStato, NuoviMovibili):-
+    spostaOggetto(Azione, X, TempMov, NuovoStatoOggetto), %questo predicato non dovrebbe modificare i Movibili e quindi non ci deve dare in output un nuovo valore di TempMov
+    removeFromList(TempMov, avversario(X), NewTempMov),
+    sposta(Azione, CodaMovibili, [avversario(NuovoStatoOggetto) | NewTempMov], TempNuovoStato, NuovoStato, NuoviMovibili).

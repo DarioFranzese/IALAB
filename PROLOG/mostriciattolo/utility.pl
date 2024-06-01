@@ -1,21 +1,21 @@
+%Attenzione che non funziona piu' con piu' uscite
 valutazione(StatoCorrente, Path, Risultato):- 
-    distanzaMinima(StatoCorrente, Distanza),
+    distanza(StatoCorrente, Distanza),
     length(Path, Lunghezza),
     Risultato is Lunghezza + Distanza.
 
+manhattan(pos(R1, C1), pos(R2, C2), D):- D is abs(R2-R1) + abs(C2-C1).
 
-distanzaMinima(StatoCorrente, DistanzaMinima):-
-    findall(Distanza, manhattan(StatoCorrente, Distanza), Distanze),
-    min_list(Distanze, DistanzaMinima).
+distanza(P1, Costo):-
+    priority_martello(1), %predicato che avro' asserito se l' uscita non e' libera, a questo punto fin tanto che c' e' il martello mi guidera' verso quest' ultimo
+    martello(P2),
+    manhattan(P1, P2, Costo).
     
-%SE L' USCITA E' CHIUSA HO ASSERITO my_martello, QUESTA COSA E' PROBABILMENTE DA RIVEDERE PERCHE' IO DEVO A PRESCINDERE ASSERIRE my_martello ALTRIMENTI
-%NON POSSO GESTIRE IL MOVIMENTO NEL LABIRINTO. PROBABILMENTE BASTA SOLO AGGIUNGERE UN ALTRO PREDICATO DI CONTROLLO NELLA KB CHE FUNGE DA FLAG IN PRATICA
-%E PERMETTE DI ATTIVARE O MENO QUESTA REGOLA (potrebbe essere tipo priority_martello(1) o na roba simile) PER CAPIRE DOVE DIRIGERE L' AGENTE
-manhattan(pos(R1, C1), Costo):-
-    my_martello(pos(R2,C2)),
-    Costo is abs(R2-R1) + abs(C2-C1).
-    
-manhattan(pos(R1, C1), Costo):-
-    finale(pos(R2,C2)),
-    Costo is abs(R2-R1) + abs(C2-C1).
+distanza(P1, Costo):-
+    finale(P2),
+    manhattan(P1, P2, Costo).
 
+ordina(sud, Lista, ListaOrdinata):-sort(1, @>=, Lista, ListaOrdinata).
+ordina(nord, Lista, ListaOrdinata):-sort(1, @=<, Lista, ListaOrdinata).
+ordina(est, Lista, ListaOrdinata):-sort(2, @>=, Lista, ListaOrdinata).
+ordina(ovest, Lista, ListaOrdinata):-sort(2, @=<, Lista, ListaOrdinata).

@@ -20,7 +20,6 @@ occupata(pos(8,3)).
 finale(pos(4,8)).
 
 
-%QUESTE VANNO INTERPRETATE COME POSIZIONI INIZALI, PERTANTO VERRANO USATI ALTRI PREDICATI "LOCALI" my_gemma, my_ghiaccio e my_martello
 gemma(pos(1,7)).
 gemma(pos(5,4)).
 gemma(pos(8,8)).
@@ -30,3 +29,10 @@ ghiaccio(pos(2,7)).
 ghiaccio(pos(7,7)).
 
 martello(pos(8,2)).
+
+avversario(pos(8,4)).
+
+%MODIFICA LA POSIZIONE DELL' AVVERSARIO QUI
+movibili([martello(pos(8,2)), gemma(pos(1,7)), gemma(pos(5,4)),gemma(pos(8,8)), ghiaccio(pos(2,6)), ghiaccio(pos(2,7)), ghiaccio(pos(7,7)), avversario(pos(3,4))]). %IL MARTELLO E' IN TESTA!+
+
+

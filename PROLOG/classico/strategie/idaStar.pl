@@ -1,4 +1,4 @@
-:- ['../labirinti/labirintoProf'], ['../utility'], ['../azioni'], ['../visualizza'].
+:- ['../labirinti/hard15x15'], ['../utility'], ['../azioni'], ['../../visualizza'].
 
 ricerca:-
     iniziale(S0),
@@ -15,7 +15,7 @@ ricerca:-
     wrapperRicProf(S0, Soglia, Cammino),
     
     write('\nIl risultato e' ), write(Cammino), write('\n '), 
-    write('La lunghezza e '), length(Cammino, Int), write(Int),
+    write('La lunghezza e '), length(Cammino, Int), write(Int), write('\n '),
     visualizza_labirinto.
 
 

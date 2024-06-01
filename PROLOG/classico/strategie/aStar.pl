@@ -1,6 +1,6 @@
-:- ['../labirinti/labirinto1280x1280'], ['../utility'], ['../azioni'], ['../../visualizza'].
+:- ['../labirinti/hard15x15'], ['../utility'], ['../azioni'], ['../../visualizza'].
 
-ricerca:-
+ricercaAStar:-
     iniziale(Start),
     valutazione(Start, [], Valutazione),
     aStar([Start, [], Valutazione], [], [Start], ReversedRis),
@@ -15,7 +15,7 @@ aStar([Corrente, Path, _], _, _, Path):-
 
 aStar([Corrente, Path, Valutazione], Frontiera, Visitati, Risultato):-
     findall(Azione, applicabile(Azione, Corrente), Azioni),
-    checkVisitati(Visitati, Corrente, Azioni, [], NuoviStati, NuoviVisitati), %NuoviStati sono i nuovi stati generati, visitati ora e' di input output e viene aggiornata
+    checkVisitati(Visitati, Corrente, Azioni, [], NuoviStati, NuoviVisitati),
 
     generaStati(Corrente, Path, Valutazione, NuoviStati, Frontiera,
          [TestaDellaNuovaFrontiera | CodaDellaNuovaFrontiera]), %Questo e' l' output
