@@ -61,12 +61,11 @@ ric_prof((Corrente, Movibili), Soglia, Visitati, [NuovaAzione | SeqAzioni]):-
 
     manhattan(Corrente, NuovoStato, Distanza), %calcola di quante celle ci siamo spostati
     NuovaSoglia is Soglia -Distanza,
-
     ric_prof((NuovoStato, NuoviMovibili), NuovaSoglia, [(Corrente, Movibili) | Visitati], SeqAzioni).
 
 %% CASO SOGLIA SFORATA (siccome decremento di >=1 potrebbe essere negativa)
-ric_prof((Corrente, _), _, Visitati, _):- !,
-    valutazione(Corrente, Visitati, Risultato),
+ric_prof((Corrente, Movibili), _, Visitati, _):- !,
+    valutazione(Corrente, Visitati, Movibili, Risultato),
     euristicaMinima(Minimo),
     retractall(euristicaMinima(_)),
     NuovoMinimo is min(Minimo, Risultato),
