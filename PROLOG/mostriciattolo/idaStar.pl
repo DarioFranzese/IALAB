@@ -39,7 +39,7 @@ wrapperRicProf((Corrente, Movibili), _, Cammino):-
     LimiteSuperiore > NuovaSoglia,!,
 
     retractall(euristicaMinima(_)),
-    assert(euristicaMinima(Limite)), %Dopo aver settato la soglia devo permettere alla prossima
+    assert(euristicaMinima(LimiteSuperiore)), %Dopo aver settato la soglia devo permettere alla prossima
                                     %iterazione di trovarmi il nuovo minimo LOCALE che pero´sara maggiore
                                     %della soglia, quindi una volta salvata la soglia per l' iterazione
                                     %setto euristicaMinima al massimo cosi' che potro' salvarmi
@@ -62,7 +62,7 @@ ric_prof((Corrente, Movibili), Soglia, Visitati, [NuovaAzione | SeqAzioni]):-
                                                                            %al momento non e' garantito che il martello sia sempre in testa, bisogna decidere se modificare i predicati
 
     manhattan(Corrente, NuovoStato, Distanza), %calcola di quante celle ci siamo spostati
-    NuovaSoglia is Soglia -Distanza,
+    NuovaSoglia is Soglia-Distanza,
     ric_prof((NuovoStato, NuoviMovibili), NuovaSoglia, [(Corrente, Movibili) | Visitati], SeqAzioni).
 
 %% CASO SOGLIA SFORATA (siccome decremento di >=1 potrebbe essere negativa)
