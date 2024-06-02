@@ -5,7 +5,8 @@ ricerca:-
     valutazione(S0, [], Soglia),
 
     limite(Limite),
-    assert(euristicaMinima(Limite)),
+    LimiteSuperiore is Limite*2, %Il vero limite adesso e' due volte il limite visto che il martello parte da Limite+manhattan.
+    assert(euristicaMinima(LimiteSuperiore)),
 
     checkUscita(), %Controlla che l' uscita sia libera. Se no, forzera' l' euristica ad andare prima sul martello (asserendo un predicato di controllo, valido sempre, che avra' come semantica "se non 
                    %hai ancora preso il martello, vai prima li")
@@ -33,8 +34,9 @@ wrapperRicProf((Corrente, Movibili), Soglia, Cammino):- ric_prof((Corrente, Movi
 wrapperRicProf((Corrente, Movibili), _, Cammino):-
     euristicaMinima(NuovaSoglia),    
     write('\nNuova Soglia: '), write(NuovaSoglia),write('\n'),
-    limite(Limite),
-    Limite > NuovaSoglia,!,
+    limite(Limite), %Il vero limite adesso e' due volte il limite visto che il martello parte da Limite+manhattan.
+    LimiteSuperiore is Limite*2,
+    LimiteSuperiore > NuovaSoglia,!,
 
     retractall(euristicaMinima(_)),
     assert(euristicaMinima(Limite)), %Dopo aver settato la soglia devo permettere alla prossima
