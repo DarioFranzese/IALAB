@@ -12,7 +12,7 @@ ricerca:-
                    %hai ancora preso il martello, vai prima li")
     movibili(Movibili), %prenda la lista degli oggtti movibili (ghiaccio, emme, avversario, martello), le rimuove e le salva sempre nello stato corrente (per modificarle)
                                        
-    retractall(gemma(_)), %se non li togli forse funziona comunque
+    retractall(gemma(_)), %se non li togli forse funziona comunque perche' tanto non vengono mai utilizzati
     retractall(avversario(_)),
     retractall(ghiaccio(_)),
     retractall(martello(_)),
@@ -34,16 +34,16 @@ wrapperRicProf((Corrente, Movibili), Soglia, Cammino):- ric_prof((Corrente, Movi
 wrapperRicProf((Corrente, Movibili), _, Cammino):-
     euristicaMinima(NuovaSoglia),    
     write('\nNuova Soglia: '), write(NuovaSoglia),write('\n'),
-    limite(Limite), %Il vero limite adesso e' due volte il limite visto che il martello parte da Limite+manhattan.
-    LimiteSuperiore is Limite*2,
+    limite(Limite), 
+    LimiteSuperiore is Limite*2, %Il vero limite adesso e' due volte il limite visto che il martello parte da Limite+manhattan.
     LimiteSuperiore > NuovaSoglia,!,
 
     retractall(euristicaMinima(_)),
     assert(euristicaMinima(LimiteSuperiore)), %Dopo aver settato la soglia devo permettere alla prossima
-                                    %iterazione di trovarmi il nuovo minimo LOCALE che pero´sara maggiore
-                                    %della soglia, quindi una volta salvata la soglia per l' iterazione
-                                    %setto euristicaMinima al massimo cosi' che potro' salvarmi
-                                    %il nuovo minimo (mi serve principalmente per il primo confronto)
+                                                %iterazione di trovarmi il nuovo minimo LOCALE che pero´sara maggiore
+                                                %della soglia, quindi una volta salvata la soglia per l' iterazione
+                                                %setto euristicaMinima al massimo cosi' che potro' salvarmi
+                                                %il nuovo minimo (mi serve principalmente per il primo confronto)
     wrapperRicProf((Corrente, Movibili), NuovaSoglia, Cammino).
 
 
@@ -56,6 +56,8 @@ ric_prof((S, _), _, _, []):- %in realta' questo dovrebbe controllare anche Sogli
 ric_prof((Corrente, Movibili), Soglia, Visitati, [NuovaAzione | SeqAzioni]):-
     Soglia > 0,!,
     \+member((Corrente, Movibili), Visitati),!, %questa member dovrebbe funzionare
+                                                %nei visitati dobbiamo per forza tenere le coppie, gli stati sono diversi dalle posizioni (per via
+                                                %della possibilita' di modificare il labirinto)
 
     applicabile(NuovaAzione, Corrente, Movibili), %applicabile deve solo controllare che non finisca sull' avversario o viceversa
     trasforma(NuovaAzione, Corrente, Movibili, NuovoStato, NuoviMovibili), %trasforma deve prima ordinare Movibili+Corrente a seconda di NuovaAzione, e poi spostarli uno ad uno tutti

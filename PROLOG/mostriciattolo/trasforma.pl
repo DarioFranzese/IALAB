@@ -106,19 +106,28 @@ spostaAgente(ovest, pos(R, C), pos(RNuovo, CNuovo), Movibili):-
 
 */
 
-trasforma(Azione, Corrente, Movibili, NuovoStato, NuoviMovibili):-
+/* QUESTI SERVONO SOLO PER TESTARE GLI ALTRI PREDICATI */
+spostaAgente(_, _, [_ | CodaMovibili], pos(1,1), CodaMovibili).
+spostaOggetto(_, _, _, pos(1,1)).
+/********************************************************************/
+
+trasforma(Azione, Corrente, Movibili, NuovoStato, NuoviMovibili):- %NuoviMovibili dovrebbe avere sempre il martello in testa (se non e' stato preso)
     ordina(Azione, [corrente(Corrente) | Movibili], MovibiliOrdinati), %il predicato corrente verra' usato per identificare l' agente
     sposta(Azione, MovibiliOrdinati, MovibiliOrdinati, _, NuovoStato, NuoviMovibili). %questo wrapper prendera' un movibile alla volta e lo spostera', restituendo poi i NuoviMovibili (potenzialmente prendiamo il martello
-                                                                        %oppure rompiamo il ghiaccio) e il nuovo stato dell' agente
-                                                                        %quello che sopra e' chiamato spostaAgente sara' spostaAgente, andra' poi fatto spostaAgenteOggetto.
+                                                                                        %oppure rompiamo il ghiaccio) e il nuovo stato dell' agente.
+                                                                                        %Questo potra' chiamare spostaAgente o spostaOggetto a seconda se l' elemento corrente della lista sia uno o l' altro
+                                                                                        %Questo e' necessario per il modo in cui affrontano gli ostacoli i due tipi di movibili
                                                                         
 
 %CASO BASE
-sposta(_, [], NuoviMovibili, NuovoStato, NuovoStato, [martello(X) | NuoviMovibiliFinali]):- %rimuove il corrente dai movibili (che ci serviva fino ad ora) e mette il martello in testa
+%abbiamo spostato tutti i movibili (Movibili=[]) e quindi rimuoviamo il corrente dai nuovi movibili e mettiamo il martello in testa (cosa che trasforma deve garantire)
+%TESTATO FUNZIONA
+sposta(_, [], NuoviMovibili, NuovoStato, NuovoStato, [martello(X) | NuoviMovibiliFinali]):-
     delete(NuoviMovibili, corrente(_), NM),
     getPosizioneMartello(NM, X),
-    delete(NM, martello(_), NuoviMovibiliFinali).                                                             
+    delete(NM, martello(_), NuoviMovibiliFinali). %rimuovilo dalla lista per essere sicuro stia solo in testa                                                             
 
+%TESTATO CON spostaAgente fake E FUNZIONA
 sposta(Azione, [ corrente(X) | CodaMovibili], TempMov, _, NuovoStato, NuoviMovibili):-
     spostaAgente(Azione, X, TempMov, NuovoStatoAgente, MovibiliPostAgente), %questo e' l'unico predicato che dovra' modificare NuovoStato
     delete(MovibiliPostAgente, corrente(X), NuovaCodaMovibili), %Movibili post agente sara' l' elenco dei movibili potenzialmente primo di ghiaccio e martello, tuttavia contiene ancora la posizione
@@ -126,7 +135,7 @@ sposta(Azione, [ corrente(X) | CodaMovibili], TempMov, _, NuovoStato, NuoviMovib
     sposta(Azione, CodaMovibili, [corrente(NuovoStato) | NuovaCodaMovibili], NuovoStatoAgente, NuovoStato, NuoviMovibili). %metto il corrente in testa tanto e' indifferente
                                                                                                          %Occhio All' utilizzo di NuovoStato non mi convince
 
-
+%TESTATO CON spostaOggetto fake E FUNZIONA
 sposta(Azione, [ gemma(X) | CodaMovibili], TempMov, TempNuovoStato, NuovoStato, NuoviMovibili):-
     spostaOggetto(Azione, X, TempMov, NuovoStatoOggetto), %questo predicato non dovrebbe modificare i Movibili e quindi non ci deve dare in output un nuovo valore di TempMov
     delete(TempMov, gemma(X), NewTempMov),
