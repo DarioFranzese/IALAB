@@ -3,7 +3,7 @@ num_colonne(8).
 
 limite(Risultato) :- num_righe(NR), num_colonne(NC), Risultato is NR*NC.
 
-iniziale(pos(8,4)).
+iniziale(pos(1,4)).
 
 occupata(pos(2,2)).
 occupata(pos(1,6)).
@@ -30,8 +30,8 @@ ghiaccio(pos(7,7)).
 
 martello(pos(8,2)).
 
-avversario(pos(1,1)).
+avversario(pos(7,4)).
 
-movibili([martello(pos(8,2)), gemma(pos(1,7)), gemma(pos(5,4)),gemma(pos(8,8)), ghiaccio(pos(2,6)), ghiaccio(pos(2,7)), ghiaccio(pos(7,7)), avversario(pos(1,1))]).
+movibili([martello(pos(8,2)), gemma(pos(1,7)), gemma(pos(5,4)),gemma(pos(8,8)), ghiaccio(pos(2,6)), ghiaccio(pos(2,7)), ghiaccio(pos(7,7)), avversario(pos(7,4))]).
 
 

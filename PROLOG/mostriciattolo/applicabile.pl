@@ -2,6 +2,9 @@
 %SUCCESSIVAMENTE CONTROLLA CHE NELL' EFFETTUARE L' AZIONE, L' AVVERSARIO NON GLI FINISCA ADDOSSO
 %CIO' VIENE FATTO ANDANDO A CONTROLLARE UNA POSIZIONE ALLA VOLTA
 
+%implementati predicati di movimento effettivi, si potrebbe sfruttare quelli per check avversario:basta chiamarlo nelle due direzioni (input e speculare)
+%e verificare che la posizione del corrente e dell' avversario non siano uguali (ovvero l' avversario e' finito addosso al player o viceversa)
+
 %MI FERMO PERCHE' HO FINITO IL LABIRINTO
 checkAvversario(nord, 1, _, _).
 checkAvversario(ovest, _, 1, _).
