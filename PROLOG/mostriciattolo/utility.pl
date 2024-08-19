@@ -44,7 +44,7 @@ sort_on_second_desc(L, SortedL) :-
     keysort(Pairs, SortedPairs),
     pairs_values(SortedPairs, SortedL).
 
-ordina(sud, Lista, ListaOrdinata):-sort(Lista, ListaOrdinata).
-ordina(nord, Lista, ListaOrdinata):-sort(Lista, ListaOrdinata).
+ordina(sud, Lista, ListaOrdinata):-sort(1, @>=, Lista, ListaOrdinata).
+ordina(nord, Lista, ListaOrdinata):-sort(1, @=<, Lista, ListaOrdinata).
 ordina(est, Lista, ListaOrdinata):-sort_on_second_desc( Lista, ListaOrdinata).
 ordina(ovest, Lista, ListaOrdinata):-sort_on_second_asc( Lista, ListaOrdinata).

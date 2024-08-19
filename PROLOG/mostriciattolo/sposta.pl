@@ -94,24 +94,24 @@ spostaAgente(_, pos(R, C), MovibiliPostAgente, pos(R, C), MovibiliPostAgente):- 
 spostaAgente(nord, pos(1, C), MovibiliPostAgente, pos(1, C), MovibiliPostAgente).
 
 %CASO BASE SONO ARRIVATO AD UN OSTACOLO
-spostaAgente(nord, pos(R,C), Movibili, pos(R,C), Movibili):- \+member(martello(_), Movibili), !, NR is R-1, member(ghiaccio(pos(NR, C)), Movibili), !.
+spostaAgente(nord, pos(R,C), Movibili, pos(R,C), Movibili):- member(martello(_), Movibili), !, NR is R-1, member(ghiaccio(pos(NR, C)), Movibili), !.
 spostaAgente(nord, pos(R,C), Movibili, pos(R,C), Movibili):- NR is R-1, member(gemma(pos(NR, C)), Movibili), !.
 spostaAgente(nord, pos(R,C), Movibili, pos(R,C), Movibili):- NR is R-1, occupata(pos(NR, C)), !.
 
 %SE TROVO IL MARTELLO LO PRENDO
 spostaAgente(nord, pos(R,C), Movibili, NuovoStato, NuoviMovibili):-
     member(martello(pos(R,C)), Movibili),
-    delete(Movibili, martello(pos(R,C)), NuoviMovibili),
+    delete(Movibili, martello(pos(R,C)), MovibiliSenzaMartello),
     NR is R-1,
-    spostaAgente(nord, NuoviMovibili, pos(NR, C), NuovoStato, NuoviMovibili).
+    spostaAgente(nord, pos(NR, C), MovibiliSenzaMartello, NuovoStato, NuoviMovibili).
 
 
 %CASO IN CUI TROVO IL GHIACCIO MA HO IL MARTELLO, RIMUOVO IL GHIACCIO
 spostaAgente(nord, pos(R,C), Movibili, NuovoStato, NuoviMovibili):-
     NR is R-1,
     member(ghiaccio(pos(NR, C)), Movibili),
-    delete(Movibili, ghiaccio(pos(NR, C)), NuoviMovibili),
-    spostaAgente(nord, NuoviMovibili, pos(NR, C), NuovoStato, NuoviMovibili).
+    delete(Movibili, ghiaccio(pos(NR, C)), MovibiliSenzaGhiaccio),
+    spostaAgente(nord, pos(NR, C), MovibiliSenzaGhiaccio, NuovoStato, NuoviMovibili).
 
 %CASO RICORSIVO STANDARD
 spostaAgente(nord, pos(R, C), Movibili,  NuovoStato, NuoviMovibili):-
@@ -125,24 +125,24 @@ spostaAgente(nord, pos(R, C), Movibili,  NuovoStato, NuoviMovibili):-
 spostaAgente(sud, pos(R, C), MovibiliPostAgente, pos(R, C), MovibiliPostAgente):-num_righe(R).
 
 %CASO BASE SONO ARRIVATO AD UN OSTACOLO
-spostaAgente(sud, pos(R,C), Movibili, pos(R,C), Movibili):- \+member(martello(_), Movibili), !, NR is R+1, member(ghiaccio(pos(NR, C)), Movibili), !.
+spostaAgente(sud, pos(R,C), Movibili, pos(R,C), Movibili):- member(martello(_), Movibili), !, NR is R+1, member(ghiaccio(pos(NR, C)), Movibili), !.
 spostaAgente(sud, pos(R,C), Movibili, pos(R,C), Movibili):- NR is R+1, member(gemma(pos(NR, C)), Movibili), !.
 spostaAgente(sud, pos(R,C), Movibili, pos(R,C), Movibili):- NR is R+1, occupata(pos(NR, C)), !.
 
 %SE TROVO IL MARTELLO LO PRENDO
 spostaAgente(sud, pos(R,C), Movibili, NuovoStato, NuoviMovibili):-
     member(martello(pos(R,C)), Movibili),
-    delete(Movibili, martello(pos(R,C)), NuoviMovibili),
+    delete(Movibili, martello(pos(R,C)), MovibiliSenzaMartello),
     NR is R+1,
-    spostaAgente(sud, NuoviMovibili, pos(NR, C), NuovoStato, NuoviMovibili).
+    spostaAgente(sud, pos(NR, C), MovibiliSenzaMartello, NuovoStato, NuoviMovibili).
 
 
 %CASO IN CUI TROVO IL GHIACCIO MA HO IL MARTELLO, RIMUOVO IL GHIACCIO
 spostaAgente(sud, pos(R,C), Movibili, NuovoStato, NuoviMovibili):-
     NR is R+1,
     member(ghiaccio(pos(NR, C)), Movibili),
-    delete(Movibili, ghiaccio(pos(NR, C)), NuoviMovibili),
-    spostaAgente(sud, NuoviMovibili, pos(NR, C), NuovoStato, NuoviMovibili).
+    delete(Movibili, ghiaccio(pos(NR, C)), MovibiliSenzaGhiaccio),
+    spostaAgente(sud, pos(NR,C), MovibiliSenzaGhiaccio, NuovoStato, NuoviMovibili).
 
 %CASO RICORSIVO STANDARD
 spostaAgente(sud, pos(R, C), Movibili,  NuovoStato, NuoviMovibili):-
@@ -156,24 +156,24 @@ spostaAgente(sud, pos(R, C), Movibili,  NuovoStato, NuoviMovibili):-
 spostaAgente(est, pos(R, C), MovibiliPostAgente, pos(R, C), MovibiliPostAgente):-num_colonne(C).
 
 %CASO BASE SONO ARRIVATO AD UN OSTACOLO
-spostaAgente(est, pos(R,C), Movibili, pos(R,C), Movibili):- \+member(martello(_), Movibili), !, NC is C+1, member(ghiaccio(pos(R, NC)), Movibili), !.
+spostaAgente(est, pos(R,C), Movibili, pos(R,C), Movibili):- member(martello(_), Movibili), NC is C+1, member(ghiaccio(pos(R, NC)), Movibili), !. %conviene invertire i controlli
 spostaAgente(est, pos(R,C), Movibili, pos(R,C), Movibili):- NC is C+1, member(gemma(pos(R, NC)), Movibili), !.
 spostaAgente(est, pos(R,C), Movibili, pos(R,C), Movibili):- NC is C+1, occupata(pos(R, NC)), !.
 
 %SE TROVO IL MARTELLO LO PRENDO
 spostaAgente(est, pos(R,C), Movibili, NuovoStato, NuoviMovibili):-
     member(martello(pos(R,C)), Movibili),
-    delete(Movibili, martello(pos(R,C)), NuoviMovibili),
+    delete(Movibili, martello(pos(R,C)), MovibiliSenzaMartello),
     NC is C+1,
-    spostaAgente(est, NuoviMovibili, pos(R, NC), NuovoStato, NuoviMovibili).
+    spostaAgente(est, pos(R, NC), MovibiliSenzaMartello, NuovoStato, NuoviMovibili).
 
 
 %CASO IN CUI TROVO IL GHIACCIO MA HO IL MARTELLO, RIMUOVO IL GHIACCIO
 spostaAgente(est, pos(R,C), Movibili, NuovoStato, NuoviMovibili):-
     NC is C+1,
     member(ghiaccio(pos(R, NC)), Movibili),
-    delete(Movibili, ghiaccio(pos(R, NC)), NuoviMovibili),
-    spostaAgente(est, NuoviMovibili, pos(R, NC), NuovoStato, NuoviMovibili).
+    delete(Movibili, ghiaccio(pos(R, NC)), MovibiliSenzaGhiaccio), 
+    spostaAgente(est, pos(R, NC), MovibiliSenzaGhiaccio, NuovoStato, NuoviMovibili).
 
 
 %CASO RICORSIVO STANDARD
@@ -189,24 +189,24 @@ spostaAgente(est, pos(R, C), Movibili,  NuovoStato, NuoviMovibili):-
 spostaAgente(ovest, pos(R, 1), MovibiliPostAgente, pos(R, 1), MovibiliPostAgente).
 
 %CASO BASE SONO ARRIVATO AD UN OSTACOLO
-spostaAgente(ovest, pos(R,C), Movibili, pos(R,C), Movibili):- \+member(martello(_), Movibili), !, NC is C-1, member(ghiaccio(pos(R, NC)), Movibili), !.
+spostaAgente(ovest, pos(R,C), Movibili, pos(R,C), Movibili):- member(martello(_), Movibili), !, NC is C-1, member(ghiaccio(pos(R, NC)), Movibili), !.
 spostaAgente(ovest, pos(R,C), Movibili, pos(R,C), Movibili):- NC is C-1, member(gemma(pos(R, NC)), Movibili), !.
 spostaAgente(ovest, pos(R,C), Movibili, pos(R,C), Movibili):- NC is C-1, occupata(pos(R, NC)), !.
 
 %SE TROVO IL MARTELLO LO PRENDO
 spostaAgente(ovest, pos(R,C), Movibili, NuovoStato, NuoviMovibili):-
     member(martello(pos(R,C)), Movibili),
-    delete(Movibili, martello(pos(R,C)), NuoviMovibili),
+    delete(Movibili, martello(pos(R,C)), MovibiliSenzaMartello),
     NC is C-1,
-    spostaAgente(ovest, NuoviMovibili, pos(R, NC), NuovoStato, NuoviMovibili).
+    spostaAgente(ovest, pos(R, NC), MovibiliSenzaMartello, NuovoStato, NuoviMovibili).
 
 
 %CASO IN CUI TROVO IL GHIACCIO MA HO IL MARTELLO, RIMUOVO IL GHIACCIO
 spostaAgente(ovest, pos(R,C), Movibili, NuovoStato, NuoviMovibili):-
     NC is C-1,
     member(ghiaccio(pos(R, NC)), Movibili),
-    delete(Movibili, ghiaccio(pos(R, NC)), NuoviMovibili),
-    spostaAgente(ovest, NuoviMovibili, pos(R, NC), NuovoStato, NuoviMovibili).
+    delete(Movibili, ghiaccio(pos(R, NC)), MovibiliSenzaGhiaccio),
+    spostaAgente(ovest, pos(R, NC), MovibiliSenzaGhiaccio, NuovoStato, NuoviMovibili).
 
 
 %CASO RICORSIVO STANDARD
