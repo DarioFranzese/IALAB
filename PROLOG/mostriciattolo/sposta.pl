@@ -94,7 +94,7 @@ spostaAgente(_, pos(R, C), MovibiliPostAgente, pos(R, C), MovibiliPostAgente):- 
 spostaAgente(nord, pos(1, C), MovibiliPostAgente, pos(1, C), MovibiliPostAgente).
 
 %CASO BASE SONO ARRIVATO AD UN OSTACOLO
-spostaAgente(nord, pos(R,C), Movibili, pos(R,C), Movibili):- member(martello(_), Movibili), !, NR is R-1, member(ghiaccio(pos(NR, C)), Movibili), !.
+spostaAgente(nord, pos(R,C), Movibili, pos(R,C), Movibili):- member(martello(_), Movibili), NR is R-1, member(ghiaccio(pos(NR, C)), Movibili), !.
 spostaAgente(nord, pos(R,C), Movibili, pos(R,C), Movibili):- NR is R-1, member(gemma(pos(NR, C)), Movibili), !.
 spostaAgente(nord, pos(R,C), Movibili, pos(R,C), Movibili):- NR is R-1, occupata(pos(NR, C)), !.
 
@@ -125,7 +125,7 @@ spostaAgente(nord, pos(R, C), Movibili,  NuovoStato, NuoviMovibili):-
 spostaAgente(sud, pos(R, C), MovibiliPostAgente, pos(R, C), MovibiliPostAgente):-num_righe(R).
 
 %CASO BASE SONO ARRIVATO AD UN OSTACOLO
-spostaAgente(sud, pos(R,C), Movibili, pos(R,C), Movibili):- member(martello(_), Movibili), !, NR is R+1, member(ghiaccio(pos(NR, C)), Movibili), !.
+spostaAgente(sud, pos(R,C), Movibili, pos(R,C), Movibili):- member(martello(_), Movibili), NR is R+1, member(ghiaccio(pos(NR, C)), Movibili), !.
 spostaAgente(sud, pos(R,C), Movibili, pos(R,C), Movibili):- NR is R+1, member(gemma(pos(NR, C)), Movibili), !.
 spostaAgente(sud, pos(R,C), Movibili, pos(R,C), Movibili):- NR is R+1, occupata(pos(NR, C)), !.
 
@@ -189,7 +189,7 @@ spostaAgente(est, pos(R, C), Movibili,  NuovoStato, NuoviMovibili):-
 spostaAgente(ovest, pos(R, 1), MovibiliPostAgente, pos(R, 1), MovibiliPostAgente).
 
 %CASO BASE SONO ARRIVATO AD UN OSTACOLO
-spostaAgente(ovest, pos(R,C), Movibili, pos(R,C), Movibili):- member(martello(_), Movibili), !, NC is C-1, member(ghiaccio(pos(R, NC)), Movibili), !.
+spostaAgente(ovest, pos(R,C), Movibili, pos(R,C), Movibili):- member(martello(_), Movibili), NC is C-1, member(ghiaccio(pos(R, NC)), Movibili), !.
 spostaAgente(ovest, pos(R,C), Movibili, pos(R,C), Movibili):- NC is C-1, member(gemma(pos(R, NC)), Movibili), !.
 spostaAgente(ovest, pos(R,C), Movibili, pos(R,C), Movibili):- NC is C-1, occupata(pos(R, NC)), !.
 

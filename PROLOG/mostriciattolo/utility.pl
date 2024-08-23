@@ -8,7 +8,7 @@ manhattan(pos(R1, C1), pos(R2, C2), D):- D is abs(R2-R1) + abs(C2-C1).
 
 %L' EURISTICA DEVE ESSERE SEMPRE MAGGIORE QUANDO IL MARTELLO NON E' PRESO
 distanza(P1, Costo, [martello(P2)|_]):- %SUPPONE CHE IL MARTELLO SIA SEMPRE IN TESTA
-    priorityMartello, %predicato che avro' asserito se l' uscita non e' libera, a questo punto fin tanto che c' e' il martello mi guidera' verso quest' ultimo
+    priorityMartello(1), %predicato che avro' asserito se l' uscita non e' libera, a questo punto fin tanto che c' e' il martello mi guidera' verso quest' ultimo
     manhattan(P1, P2, Costo1),!,
     limite(Costo2), %L' euristica valutata senza martello (ma dovendolo prendere per forza) deve essere sempre maggiore di quando
                     %il martello non e' strettamente necessario (non c' e' priorityMartello) o e' stato gia' preso

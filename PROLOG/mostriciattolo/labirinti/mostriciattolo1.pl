@@ -1,6 +1,8 @@
 num_righe(8).
 num_colonne(8).
 
+priorityMartello(0).
+
 limite(Risultato) :- num_righe(NR), num_colonne(NC), Risultato is NR*NC.
 
 iniziale(pos(2,3)).
@@ -32,6 +34,6 @@ martello(pos(8,2)).
 
 avversario(pos(7,4)).
 
-movibili([martello(pos(2,4)), gemma(pos(1,7)), gemma(pos(5,4)),gemma(pos(8,8)), ghiaccio(pos(2,6)), ghiaccio(pos(2,7)), ghiaccio(pos(7,7)), avversario(pos(7,4))]).
+movibili([martello(pos(8,2)), gemma(pos(1,7)), gemma(pos(5,4)),gemma(pos(8,8)), ghiaccio(pos(2,6)), ghiaccio(pos(2,7)), ghiaccio(pos(7,7)), avversario(pos(7,4))]).
 
 

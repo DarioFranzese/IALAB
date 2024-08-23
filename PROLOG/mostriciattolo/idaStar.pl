@@ -2,20 +2,15 @@
 
 ricerca:-
     iniziale(S0),
-    valutazione(S0, [], Soglia),
+    movibili(Movibili), %prenda la lista degli oggtti movibili (ghiaccio, emme, avversario, martello), le rimuove e le salva sempre nello stato corrente (per modificarle)
+    checkUscita(), %Controlla che l' uscita sia libera. Se no, forzera' l' euristica ad andare prima sul martello (asserendo un predicato di controllo, valido sempre, che avra' come semantica "se non 
+                   %hai ancora preso il martello, vai prima li")
+    valutazione(S0, [], Movibili, Soglia),
 
     limite(Limite),
     LimiteSuperiore is Limite*2, %Il vero limite adesso e' due volte il limite visto che il martello parte da Limite+manhattan.
     assert(euristicaMinima(LimiteSuperiore)),
 
-    checkUscita(), %Controlla che l' uscita sia libera. Se no, forzera' l' euristica ad andare prima sul martello (asserendo un predicato di controllo, valido sempre, che avra' come semantica "se non 
-                   %hai ancora preso il martello, vai prima li")
-    movibili(Movibili), %prenda la lista degli oggtti movibili (ghiaccio, emme, avversario, martello), le rimuove e le salva sempre nello stato corrente (per modificarle)
-                                       
-    retractall(gemma(_)), %se non li togli forse funziona comunque perche' tanto non vengono mai utilizzati
-    retractall(avversario(_)),
-    retractall(ghiaccio(_)),
-    retractall(martello(_)),
 
     write('Soglia iniziale: '), write(Soglia), write('\n'),
     write('Limite: '), write(Limite), write('\n'),
