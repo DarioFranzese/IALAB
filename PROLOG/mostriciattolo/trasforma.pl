@@ -12,10 +12,15 @@ trasforma(Azione, Corrente, Movibili, NuovoStato, NuoviMovibili):- %NuoviMovibil
 %credo vada aggiunto qualche cut
 %abbiamo spostato tutti i movibili (Movibili=[]) e quindi rimuoviamo il corrente dai nuovi movibili e mettiamo il martello in testa (cosa che trasforma deve garantire)
 %TESTATO FUNZIONA
+%caso in cui il martello non e' stato preso (lo rimetto in testa)
 sposta(_, [], NuoviMovibili, NuovoStato, NuovoStato, [martello(X) | NuoviMovibiliFinali]):-
     delete(NuoviMovibili, corrente(_), NM),
     getPosizioneMartello(NM, X),
-    delete(NM, martello(_), NuoviMovibiliFinali), !. %rimuovilo dalla lista per essere sicuro stia solo in testa                                                             
+    delete(NM, martello(_), NuoviMovibiliFinali), !. %rimuovilo dalla lista per essere sicuro stia solo in testa
+    
+%caso in cui getPosizioneMartello fallisce (il martello e' stato preso)    
+sposta(_, [], Movibili, NuovoStato, NuovoStato, NuoviMovibili):-
+    delete(Movibili, corrente(_), NuoviMovibili).
 
 
 %TESTATO CON spostaAgente fake E FUNZIONA
@@ -39,8 +44,11 @@ sposta(Azione, [ avversario(X) | CodaMovibili], TempMov, TempNuovoStato, NuovoSt
 
 %questo serve perche' nei movibili ci sono anche ghiaccio e martello che in realta' NON si muovono, quindi anziche' creare un' altra lista ancora
 %ne teniamo solo una che quando trova questi due tipi di oggetti va avanti e basta
-sposta(Azione, [ _ | CodaMovibili], TempMov, TempNuovoStato, NuovoStato, NuoviMovibili):-
-    sposta(Azione, CodaMovibili, TempMov, TempNuovoStato, NuovoStato, NuoviMovibili).
+sposta(Azione, [ martello(X) | CodaMovibili], TempMov, TempNuovoStato, NuovoStato, NuoviMovibili):-
+    sposta(Azione, CodaMovibili, [ martello(X) | TempMov] , TempNuovoStato, NuovoStato, NuoviMovibili).
+
+sposta(Azione, [ ghiaccio(X) | CodaMovibili], TempMov, TempNuovoStato, NuovoStato, NuoviMovibili):-
+    sposta(Azione, CodaMovibili, [ ghiaccio(X) | TempMov] , TempNuovoStato, NuovoStato, NuoviMovibili).
 
 
 getPosizioneMartello([martello(X)|_], X).
