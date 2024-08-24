@@ -34,7 +34,21 @@ updateSoglia(P1, P2, _, _, Soglia, NuovaSoglia):-
 
 
 
+%lo stato e' lo stesso, controllo i movibili
+checkVisitati((Corrente, Movibili), [(Corrente, MovibiliVisitati) | _]):- 
+    checkVisitatiMovibili(Movibili, MovibiliVisitati). %la seconda variabile non viene mai toccata
 
+%lo stato e' diverso, continuo a controllare gli altri Visitati
+checkVisitati((Corrente, Movibili), [_ | CodaVisitati]):-
+    checkVisitati((Corrente, Movibili), CodaVisitati).
+
+%l' elemento che stavo scorrendo non e' stato trovato tra i movibili, c' e' almeno un movibile diverso
+checkVisitatiMovibili([], _). 
+
+%ho trovato una corrispondenza per l' elemento attuale (Testa) quindi passo al prossimo elemento e "resetto" la lista di scorrimento (terza variabile)
+checkVisitatiMovibili([Testa | Coda], MovibiliVisitati):-
+    member(Testa, MovibiliVisitati),
+    checkVisitatiMovibili(Coda, MovibiliVisitati).
 
 %get_column_asc/desc e sort_on_second_asc/desc sono predicati ausiliari che servono per ordinare le liste di movibili in base alla colonna perche'
 %il predicato sort/4 riconosce pos(X,Y) come un unico argomento (giustamente) e quindi ho dovuto trovare un escamotage

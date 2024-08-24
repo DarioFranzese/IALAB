@@ -35,23 +35,25 @@ checkAvversario(ovest, R, C, Movibili):- NC is C-1, \+member(avversario(pos(R, N
 %Daro' per scontato che il martello e' sempre il primo elemento della lista dei movibili, se questo non dovesse accadere vanno cambiati i due predicati che anziche' usare Movibili usano la lista esplicita
 %con il martello in testa
 %Ha senso muovere la scacchiera anche se non si muove il corrente, non ha senso fare due volte la stessa mossa (da li il primo controllo)
+applicabile(Azione, Posizione, Movibli, []):- applicabile(Azione, Posizione, Movibli, [-1]).
+
 applicabile(nord, pos(R, C), Movibili, [UltimaAzione | _]):-
-   % nord \= UltimaAzione,
+    nord \= UltimaAzione,
     checkAvversario(nord, R, C, Movibili),!, %prima controllo che non ci sia sulla traiettoria
     checkAvversario(sud, R, C, [martello(pos(-1,-1)) | Movibili]),!. %poi controllo che "non mi venga addosso"
                                                                    %l' inserire martello(pos(-1, -1)) in testa e' un trucchetto per distinguere le due chiamate qui. In particolare questo' fara' attivare
                                                                    %il predicato per il quale se trovo un martello mi fermo (e di conseguenza non si attivera' mai quello che simula la presa del martello)
 applicabile(sud, pos(R, C), Movibili, [UltimaAzione | _]):-
-    %sud \= UltimaAzione,
+    sud \= UltimaAzione,
     checkAvversario(sud, R, C, Movibili),!,
     checkAvversario(nord, R, C, [martello(pos(-1,-1)) | Movibili]),!.
 
 applicabile(est, pos(R, C), Movibili, [UltimaAzione | _]):-
-    %est \= UltimaAzione,
+    est \= UltimaAzione,
     checkAvversario(est, R, C, Movibili),!,
     checkAvversario(ovest, R, C, [martello(pos(-1,-1)) | Movibili]),!.
 
 applicabile(ovest, pos(R, C), Movibili, [UltimaAzione | _]):-
-    %ovest \= UltimaAzione,
+    ovest \= UltimaAzione,
     checkAvversario(ovest, R, C, Movibili),!,
     checkAvversario(est, R, C, [martello(pos(-1,-1)) | Movibili]),!.

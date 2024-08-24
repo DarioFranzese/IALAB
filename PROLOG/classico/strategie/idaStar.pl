@@ -1,4 +1,4 @@
-:- ['../labirinti/hard15x15'], ['../utility'], ['../azioni'], ['../../visualizza'].
+:- ['../labirinti/labirintoProf'], ['../utility'], ['../azioni'], ['../../visualizza'].
 
 ricerca:-
     iniziale(S0),
