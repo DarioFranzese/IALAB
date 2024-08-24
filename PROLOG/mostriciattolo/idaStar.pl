@@ -50,16 +50,14 @@ ric_prof((S, _), _, _, []):- %in realta' questo dovrebbe controllare anche Sogli
 %% PASSO INDUTTIVO
 ric_prof((Corrente, Movibili), Soglia, Visitati, [NuovaAzione | SeqAzioni]):-
     Soglia > 0,!,
-    \+member((Corrente, Movibili), Visitati),!, %questa member dovrebbe funzionare
+    \+member((Corrente, Movibili), Visitati),   %questa member dovrebbe funzionare
                                                 %nei visitati dobbiamo per forza tenere le coppie, gli stati sono diversi dalle posizioni (per via
                                                 %della possibilita' di modificare il labirinto)
-
-    applicabile(NuovaAzione, Corrente, Movibili), %applicabile deve solo controllare che non finisca sull' avversario o viceversa
+    write(Corrente),
+    applicabile(NuovaAzione, Corrente, Movibili, SeqAzioni), %applicabile deve solo controllare che non finisca sull' avversario o viceversa
     trasforma(NuovaAzione, Corrente, Movibili, NuovoStato, NuoviMovibili), %trasforma deve prima ordinare Movibili+Corrente a seconda di NuovaAzione, e poi spostarli uno ad uno tutti
                                                                            %al momento non e' garantito che il martello sia sempre in testa, bisogna decidere se modificare i predicati
-
-    manhattan(Corrente, NuovoStato, Distanza), %calcola di quante celle ci siamo spostati
-    NuovaSoglia is Soglia-Distanza,
+    updateSoglia(Corrente, NuovoStato, Movibili, NuoviMovibili, Soglia, NuovaSoglia), %questo predicato e' necessario perche' abbiamo due casi diversi nel caso in cui abbiamo preso il martello o no
     ric_prof((NuovoStato, NuoviMovibili), NuovaSoglia, [(Corrente, Movibili) | Visitati], SeqAzioni).
 
 %% CASO SOGLIA SFORATA (siccome decremento di >=1 potrebbe essere negativa)

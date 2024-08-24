@@ -7,9 +7,11 @@ valutazione(StatoCorrente, Path, Movibili, Risultato):-
 manhattan(pos(R1, C1), pos(R2, C2), D):- D is abs(R2-R1) + abs(C2-C1).
 
 %L' EURISTICA DEVE ESSERE SEMPRE MAGGIORE QUANDO IL MARTELLO NON E' PRESO
-distanza(P1, Costo, [martello(P2)|_]):- %SUPPONE CHE IL MARTELLO SIA SEMPRE IN TESTA
+distanza(P1, Costo, Movibili):-
+    member(martello(_), Movibili),
     priorityMartello(1), %predicato che avro' asserito se l' uscita non e' libera, a questo punto fin tanto che c' e' il martello mi guidera' verso quest' ultimo
-    manhattan(P1, P2, Costo1),!,
+    finale(P2),
+    manhattan(P1, P2, Costo1),
     limite(Costo2), %L' euristica valutata senza martello (ma dovendolo prendere per forza) deve essere sempre maggiore di quando
                     %il martello non e' strettamente necessario (non c' e' priorityMartello) o e' stato gia' preso
     Costo is Costo1 + Costo2.
@@ -17,6 +19,21 @@ distanza(P1, Costo, [martello(P2)|_]):- %SUPPONE CHE IL MARTELLO SIA SEMPRE IN T
 distanza(P1, Costo, _):-
     finale(P2),
     manhattan(P1, P2, Costo).
+
+%caso in cui ho preso il martello durante il movimento
+updateSoglia(P1, P2, Movibili, NuoviMovibili, Soglia, NuovaSoglia):-
+    member(martello(_), Movibili),
+    \+member(martello(_), NuoviMovibili),
+    manhattan(P1, P2, Distanza),
+    limite(L),
+    NuovaSoglia is Soglia-Distanza-L.
+
+updateSoglia(P1, P2, _, _, Soglia, NuovaSoglia):-
+    manhattan(P1, P2, Distanza),
+    NuovaSoglia is Soglia-Distanza.
+
+
+
 
 
 %get_column_asc/desc e sort_on_second_asc/desc sono predicati ausiliari che servono per ordinare le liste di movibili in base alla colonna perche'

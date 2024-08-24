@@ -19,7 +19,7 @@ spostaOggetto(nord, pos(R,C), _, pos(R,C)):- NR is R-1, finale(pos(NR, C)), !.
 %CASO RICORSIVO STANDARD
 spostaOggetto(nord, pos(R, C), Movibili,  NuovoStato):-
     NR is R-1,
-    spostaOggetto(nord, pos(NR, C), Movibili,  NuovoStato).
+    spostaOggetto(nord, pos(NR, C), Movibili,  NuovoStato), !.
 
 
 
@@ -40,13 +40,13 @@ spostaOggetto(sud, pos(R,C), _, pos(R,C)):- NR is R+1, finale(pos(NR, C)), !.
 %CASO RICORSIVO STANDARD
 spostaOggetto(sud, pos(R, C), Movibili,  NuovoStato):-
     NR is R+1,
-    spostaOggetto(sud, pos(NR, C), Movibili,  NuovoStato).
+    spostaOggetto(sud, pos(NR, C), Movibili,  NuovoStato), !.
 
 
 %EST
 
 %CASO BASE SONO ARRIVATO ALLA FINE DEL LABIRINTO
-spostaOggetto(est, pos(R, C), _, pos(R, C)):- num_colonne(C). 
+spostaOggetto(est, pos(R, C), _, pos(R, C)):- num_colonne(C), !. 
 
 %CASO BASE SONO ARRIVATO AD UN OSTACOLO
 spostaOggetto(est, pos(R,C), Movibili, pos(R,C)):- NC is C+1, member(martello(pos(R, NC)), Movibili), !.
@@ -60,7 +60,7 @@ spostaOggetto(est, pos(R,C), _, pos(R,C)):- NC is C+1, finale(pos(R, NC)), !.
 %CASO RICORSIVO STANDARD
 spostaOggetto(est, pos(R, C), Movibili,  NuovoStato):-
     NC is C+1,
-    spostaOggetto(est, pos(R, NC), Movibili,  NuovoStato).
+    spostaOggetto(est, pos(R, NC), Movibili,  NuovoStato), !.
 
 
 %OVEST
@@ -103,7 +103,7 @@ spostaAgente(nord, pos(R,C), Movibili, NuovoStato, NuoviMovibili):-
     member(martello(pos(R,C)), Movibili),
     delete(Movibili, martello(pos(R,C)), MovibiliSenzaMartello),
     NR is R-1,
-    spostaAgente(nord, pos(NR, C), MovibiliSenzaMartello, NuovoStato, NuoviMovibili).
+    spostaAgente(nord, pos(NR, C), MovibiliSenzaMartello, NuovoStato, NuoviMovibili), !.
 
 
 %CASO IN CUI TROVO IL GHIACCIO MA HO IL MARTELLO, RIMUOVO IL GHIACCIO
@@ -111,12 +111,12 @@ spostaAgente(nord, pos(R,C), Movibili, NuovoStato, NuoviMovibili):-
     NR is R-1,
     member(ghiaccio(pos(NR, C)), Movibili),
     delete(Movibili, ghiaccio(pos(NR, C)), MovibiliSenzaGhiaccio),
-    spostaAgente(nord, pos(NR, C), MovibiliSenzaGhiaccio, NuovoStato, NuoviMovibili).
+    spostaAgente(nord, pos(NR, C), MovibiliSenzaGhiaccio, NuovoStato, NuoviMovibili), !.
 
 %CASO RICORSIVO STANDARD
 spostaAgente(nord, pos(R, C), Movibili,  NuovoStato, NuoviMovibili):-
     NR is R-1,
-    spostaAgente(nord, pos(NR, C), Movibili,  NuovoStato, NuoviMovibili).
+    spostaAgente(nord, pos(NR, C), Movibili,  NuovoStato, NuoviMovibili), !.
 
 
 

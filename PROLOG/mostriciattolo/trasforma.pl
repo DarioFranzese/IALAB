@@ -2,7 +2,7 @@
 %che poi nel caso base verra' ricopiato nella variabile finale. E' un po' onerosa come soluzione, ma e' per evitare di avere altre variabili ancora
 trasforma(Azione, Corrente, Movibili, NuovoStato, NuoviMovibili):- %NuoviMovibili dovrebbe avere sempre il martello in testa (se non e' stato preso)
     ordina(Azione, [corrente(Corrente) | Movibili], MovibiliOrdinati), %il predicato corrente verra' usato per identificare l' agente
-    sposta(Azione, MovibiliOrdinati, MovibiliOrdinati, _, NuovoStato, NuoviMovibili), !. %questo wrapper prendera' un movibile alla volta e lo spostera', restituendo poi i NuoviMovibili (potenzialmente prendiamo il martello
+    sposta(Azione, MovibiliOrdinati, MovibiliOrdinati, _, NuovoStato, NuoviMovibili). %questo wrapper prendera' un movibile alla volta e lo spostera', restituendo poi i NuoviMovibili (potenzialmente prendiamo il martello
                                                                                         %oppure rompiamo il ghiaccio) e il nuovo stato dell' agente.
                                                                                         %Questo potra' chiamare spostaAgente o spostaOggetto a seconda se l' elemento corrente della lista sia uno o l' altro
                                                                                         %Questo e' necessario per il modo in cui affrontano gli ostacoli i due tipi di movibili
@@ -16,7 +16,7 @@ trasforma(Azione, Corrente, Movibili, NuovoStato, NuoviMovibili):- %NuoviMovibil
 sposta(_, [], NuoviMovibili, NuovoStato, NuovoStato, [martello(X) | NuoviMovibiliFinali]):-
     delete(NuoviMovibili, corrente(_), NM),
     getPosizioneMartello(NM, X),
-    delete(NM, martello(_), NuoviMovibiliFinali), !. %rimuovilo dalla lista per essere sicuro stia solo in testa
+    delete(NM, martello(_), NuoviMovibiliFinali). %rimuovilo dalla lista per essere sicuro stia solo in testa
     
 %caso in cui getPosizioneMartello fallisce (il martello e' stato preso)    
 sposta(_, [], Movibili, NuovoStato, NuovoStato, NuoviMovibili):-
@@ -44,11 +44,9 @@ sposta(Azione, [ avversario(X) | CodaMovibili], TempMov, TempNuovoStato, NuovoSt
 
 %questo serve perche' nei movibili ci sono anche ghiaccio e martello che in realta' NON si muovono, quindi anziche' creare un' altra lista ancora
 %ne teniamo solo una che quando trova questi due tipi di oggetti va avanti e basta
-sposta(Azione, [ martello(X) | CodaMovibili], TempMov, TempNuovoStato, NuovoStato, NuoviMovibili):-
-    sposta(Azione, CodaMovibili, [ martello(X) | TempMov] , TempNuovoStato, NuovoStato, NuoviMovibili).
+sposta(Azione, [ _ | CodaMovibili], TempMov, TempNuovoStato, NuovoStato, NuoviMovibili):-
+    sposta(Azione, CodaMovibili, TempMov , TempNuovoStato, NuovoStato, NuoviMovibili).
 
-sposta(Azione, [ ghiaccio(X) | CodaMovibili], TempMov, TempNuovoStato, NuovoStato, NuoviMovibili):-
-    sposta(Azione, CodaMovibili, [ ghiaccio(X) | TempMov] , TempNuovoStato, NuovoStato, NuoviMovibili).
 
 
 getPosizioneMartello([martello(X)|_], X).
