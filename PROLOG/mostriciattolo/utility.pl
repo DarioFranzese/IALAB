@@ -14,7 +14,7 @@ distanza(P1, Costo, Movibili):-
     manhattan(P1, P2, Costo1),
     limite(Costo2), %L' euristica valutata senza martello (ma dovendolo prendere per forza) deve essere sempre maggiore di quando
                     %il martello non e' strettamente necessario (non c' e' priorityMartello) o e' stato gia' preso
-    Costo is Costo1 + Costo2.
+    Costo is Costo1 + Costo2,  !.
     
 distanza(P1, Costo, _):-
     finale(P2),
@@ -26,21 +26,23 @@ updateSoglia(P1, P2, Movibili, NuoviMovibili, Soglia, NuovaSoglia):-
     \+member(martello(_), NuoviMovibili),
     manhattan(P1, P2, Distanza),
     limite(L),
-    NuovaSoglia is Soglia-Distanza-L.
+    NuovaSoglia is Soglia-Distanza-L, !.
 
 updateSoglia(P1, P2, _, _, Soglia, NuovaSoglia):-
     manhattan(P1, P2, Distanza),
     NuovaSoglia is Soglia-Distanza.
 
 
+%caso migliore, ho sia lo stesso stato corrente che gli stessi movibili visitati, posso evitare la member uno ad uno (checkMovibiliVisitati)
+checkVisitati((Corrente, Movibili), [(Corrente, Movibili) | _]).
 
 %lo stato e' lo stesso, controllo i movibili
 checkVisitati((Corrente, Movibili), [(Corrente, MovibiliVisitati) | _]):- 
-    checkVisitatiMovibili(Movibili, MovibiliVisitati). %la seconda variabile non viene mai toccata
+    checkVisitatiMovibili(Movibili, MovibiliVisitati), !. %la seconda variabile non viene mai toccata
 
 %lo stato e' diverso, continuo a controllare gli altri Visitati
 checkVisitati((Corrente, Movibili), [_ | CodaVisitati]):-
-    checkVisitati((Corrente, Movibili), CodaVisitati).
+    checkVisitati((Corrente, Movibili), CodaVisitati), !.
 
 %l' elemento che stavo scorrendo non e' stato trovato tra i movibili, c' e' almeno un movibile diverso
 checkVisitatiMovibili([], _). 
@@ -48,7 +50,7 @@ checkVisitatiMovibili([], _).
 %ho trovato una corrispondenza per l' elemento attuale (Testa) quindi passo al prossimo elemento e "resetto" la lista di scorrimento (terza variabile)
 checkVisitatiMovibili([Testa | Coda], MovibiliVisitati):-
     member(Testa, MovibiliVisitati),
-    checkVisitatiMovibili(Coda, MovibiliVisitati).
+    checkVisitatiMovibili(Coda, MovibiliVisitati), !.
 
 %get_column_asc/desc e sort_on_second_asc/desc sono predicati ausiliari che servono per ordinare le liste di movibili in base alla colonna perche'
 %il predicato sort/4 riconosce pos(X,Y) come un unico argomento (giustamente) e quindi ho dovuto trovare un escamotage

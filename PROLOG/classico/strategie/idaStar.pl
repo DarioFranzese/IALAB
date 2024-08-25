@@ -58,8 +58,8 @@ ric_prof(Corrente, 0, Visitati, _):- !,
 
 %% PASSO INDUTTIVO
 ric_prof(Corrente, Soglia, Visitati, [NuovaAzione | SeqAzioni]):-
-    Soglia > 0,!,
-    \+member(Corrente, Visitati),!,
+    Soglia > 0,!, %questo controllo dovrebbe essere superfluo
+    \+member(Corrente, Visitati),!, %questo cut dovrebbe essere superfluo
     applicabile(NuovaAzione, Corrente), 
     trasforma(NuovaAzione, Corrente, NuovoStato),
 

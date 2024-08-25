@@ -3,8 +3,9 @@
 ricerca:-
     iniziale(S0),
     movibili(Movibili), %prenda la lista degli oggtti movibili (ghiaccio, emme, avversario, martello), le rimuove e le salva sempre nello stato corrente (per modificarle)
-    checkUscita(), %Controlla che l' uscita sia libera. Se no, forzera' l' euristica ad andare prima sul martello (asserendo un predicato di controllo, valido sempre, che avra' come semantica "se non 
+%    checkUscita(), %Controlla che l' uscita sia libera. Se no, forzera' l' euristica ad andare prima sul martello (asserendo un predicato di controllo, valido sempre, che avra' come semantica "se non 
                    %hai ancora preso il martello, vai prima li")
+    %checkUscita funziona, per il momento e' mutato per facilitare il debug.
     valutazione(S0, [], Movibili, Soglia),
 
     limite(Limite),
@@ -51,8 +52,8 @@ ric_prof((S, _), _, _, Cammino, Cammino):- %in realta' questo dovrebbe controlla
 
 %% CASO SOGLIA SFORATA (siccome decremento di >=1 potrebbe essere negativa)
 ric_prof((Corrente, Movibili), Soglia, Visitati, _, _):-
-    write(Corrente), write('aaaaaa\n'),
     Soglia<0,!,
+    write(Corrente), write('Ho sforato la soglia\n'),
     valutazione(Corrente, Visitati, Movibili, Risultato),
     euristicaMinima(Minimo),
     retractall(euristicaMinima(_)),
@@ -62,12 +63,11 @@ ric_prof((Corrente, Movibili), Soglia, Visitati, _, _):-
     
 %% PASSO INDUTTIVO
 ric_prof((Corrente, Movibili), Soglia, Visitati, TempCammino, Cammino):-
-    write(Corrente), write('bbbb\n'),
-    Soglia >= 0,
+    write(Corrente), write('Non ho sforato la Soglia\n'),
     \+checkVisitati((Corrente, Movibili), Visitati), %e' necessario perche' talvolta se riesegue due volte la stessa mossa ordina i movibili in maniera diversa quindi la member fallisce
                                                 %nei visitati dobbiamo per forza tenere le coppie, gli stati sono diversi dalle posizioni (per via
                                                 %della possibilita' di modificare il labirinto)
-    applicabile(NuovaAzione, Corrente, Movibili, TempCammino), %applicabile deve solo controllare che non finisca sull' avversario o viceversa
+    applicabile(NuovaAzione, Corrente, Movibili, TempCammino),
     trasforma(NuovaAzione, Corrente, Movibili, NuovoStato, NuoviMovibili), %trasforma deve prima ordinare Movibili+Corrente a seconda di NuovaAzione, e poi spostarli uno ad uno tutti
                                                                            %al momento non e' garantito che il martello sia sempre in testa, bisogna decidere se modificare i predicati
     updateSoglia(Corrente, NuovoStato, Movibili, NuoviMovibili, Soglia, NuovaSoglia), %questo predicato e' necessario perche' abbiamo due casi diversi nel caso in cui abbiamo preso il martello o no

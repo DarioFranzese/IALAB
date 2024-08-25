@@ -4,6 +4,10 @@
 %Si noti che la differenza principale con spostaAgente e' che localmente non puo' modificare i movibili 
 %(es. non puo' rompere il ghiaccio o prendere il martello) quindi ha una variabile in meno da gestire.
 
+/***********************************************************************************************/
+%serve solo a semplificare il debug, cosi' gli oggetti non si muovono
+spostaOggetto(_, X, _, X).
+
 %CASO BASE SONO ARRIVATO ALLA FINE DEL LABIRINTO
 spostaOggetto(nord, pos(1, C), _, pos(1, C)).
 

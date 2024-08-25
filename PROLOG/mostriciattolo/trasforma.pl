@@ -16,11 +16,11 @@ trasforma(Azione, Corrente, Movibili, NuovoStato, NuoviMovibili):- %NuoviMovibil
 sposta(_, [], NuoviMovibili, NuovoStato, NuovoStato, [martello(X) | NuoviMovibiliFinali]):-
     delete(NuoviMovibili, corrente(_), NM),
     getPosizioneMartello(NM, X),
-    delete(NM, martello(_), NuoviMovibiliFinali). %rimuovilo dalla lista per essere sicuro stia solo in testa
+    delete(NM, martello(_), NuoviMovibiliFinali), !. %rimuovilo dalla lista per essere sicuro stia solo in testa
     
 %caso in cui getPosizioneMartello fallisce (il martello e' stato preso)    
 sposta(_, [], Movibili, NuovoStato, NuovoStato, NuoviMovibili):-
-    delete(Movibili, corrente(_), NuoviMovibili).
+    delete(Movibili, corrente(_), NuoviMovibili), !.
 
 
 %TESTATO CON spostaAgente fake E FUNZIONA
@@ -28,24 +28,24 @@ sposta(Azione, [ corrente(X) | CodaMovibili], TempMov, _, NuovoStato, NuoviMovib
     spostaAgente(Azione, X, TempMov, NuovoStatoAgente, MovibiliPostAgente), %questo e' l'unico predicato che dovra' modificare NuovoStato
     delete(MovibiliPostAgente, corrente(X), NuovaCodaMovibili), %Movibili post agente sara' l' elenco dei movibili potenzialmente primo di ghiaccio e martello, tuttavia contiene ancora la posizione
                                                                        %del corrente, che va quindi tolta per poi aggiungerci il nuovo corrente
-    sposta(Azione, CodaMovibili, [corrente(NuovoStato) | NuovaCodaMovibili], NuovoStatoAgente, NuovoStato, NuoviMovibili). %metto il corrente in testa tanto e' indifferente
+    sposta(Azione, CodaMovibili, [corrente(NuovoStato) | NuovaCodaMovibili], NuovoStatoAgente, NuovoStato, NuoviMovibili), !. %metto il corrente in testa tanto e' indifferente
                                                                                                          %Occhio All' utilizzo di NuovoStato non mi convince
 
 %TESTATO CON spostaOggetto fake E FUNZIONA
 sposta(Azione, [ gemma(X) | CodaMovibili], TempMov, TempNuovoStato, NuovoStato, NuoviMovibili):-
     spostaOggetto(Azione, X, TempMov, NuovoStatoOggetto), %questo predicato non dovrebbe modificare i Movibili e quindi non ci deve dare in output un nuovo valore di TempMov
     delete(TempMov, gemma(X), NewTempMov),
-    sposta(Azione, CodaMovibili, [gemma(NuovoStatoOggetto) | NewTempMov], TempNuovoStato, NuovoStato, NuoviMovibili).
+    sposta(Azione, CodaMovibili, [gemma(NuovoStatoOggetto) | NewTempMov], TempNuovoStato, NuovoStato, NuoviMovibili), !.
 
 sposta(Azione, [ avversario(X) | CodaMovibili], TempMov, TempNuovoStato, NuovoStato, NuoviMovibili):-
     spostaOggetto(Azione, X, TempMov, NuovoStatoOggetto), %questo predicato non dovrebbe modificare i Movibili e quindi non ci deve dare in output un nuovo valore di TempMov
     delete(TempMov, avversario(X), NewTempMov),
-    sposta(Azione, CodaMovibili, [avversario(NuovoStatoOggetto) | NewTempMov], TempNuovoStato, NuovoStato, NuoviMovibili).
+    sposta(Azione, CodaMovibili, [avversario(NuovoStatoOggetto) | NewTempMov], TempNuovoStato, NuovoStato, NuoviMovibili), !.
 
 %questo serve perche' nei movibili ci sono anche ghiaccio e martello che in realta' NON si muovono, quindi anziche' creare un' altra lista ancora
 %ne teniamo solo una che quando trova questi due tipi di oggetti va avanti e basta
 sposta(Azione, [ _ | CodaMovibili], TempMov, TempNuovoStato, NuovoStato, NuoviMovibili):-
-    sposta(Azione, CodaMovibili, TempMov , TempNuovoStato, NuovoStato, NuoviMovibili).
+    sposta(Azione, CodaMovibili, TempMov , TempNuovoStato, NuovoStato, NuoviMovibili), !.
 
 
 
