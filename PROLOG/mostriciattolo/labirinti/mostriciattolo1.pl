@@ -5,7 +5,7 @@ priorityMartello(0).
 
 limite(Risultato) :- num_righe(NR), num_colonne(NC), Risultato is NR*NC.
 
-iniziale(pos(2,3)).
+iniziale(pos(1,4)).
 
 occupata(pos(2,2)).
 occupata(pos(1,6)).

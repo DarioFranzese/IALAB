@@ -10,7 +10,7 @@ ricerca:-
 
     limite(Limite),
     LimiteSuperiore is Limite*2, %Il vero limite adesso e' due volte il limite visto che il martello parte da Limite+manhattan.
-    assert(euristicaMinima(LimiteSuperiore)),
+    assert(euristicaMinima(Soglia)),
 
 
     write('Soglia iniziale: '), write(Soglia), write('\n'),
@@ -29,20 +29,22 @@ wrapperRicProf((Corrente, Movibili), Soglia, Cammino):- ric_prof((Corrente, Movi
 
 %%CASO DI FALLIMENTO, AGGIORNAMENTO DELLA SOGLIA
 wrapperRicProf((Corrente, Movibili), _, Cammino):-
-    euristicaMinima(NuovaSoglia),    
+    euristicaMinima(NS),
+    NuovaSoglia is NS+1,    
+    
     write('\nNuova Soglia: '), write(NuovaSoglia),write('\n'),
     limite(Limite), 
     LimiteSuperiore is Limite*2, %Il vero limite adesso e' due volte il limite visto che il martello parte da Limite+manhattan.
-    LimiteSuperiore > NuovaSoglia,
+    LimiteSuperiore > NuovaSoglia,!,
+
 
     retractall(euristicaMinima(_)),
-    assert(euristicaMinima(LimiteSuperiore)), %Dopo aver settato la soglia devo permettere alla prossima
+    assert(euristicaMinima(NuovaSoglia)), %Dopo aver settato la soglia devo permettere alla prossima
                                                 %iterazione di trovarmi il nuovo minimo LOCALE che pero´sara maggiore
                                                 %della soglia, quindi una volta salvata la soglia per l' iterazione
                                                 %setto euristicaMinima al massimo cosi' che potro' salvarmi
                                                 %il nuovo minimo (mi serve principalmente per il primo confronto)
     wrapperRicProf((Corrente, Movibili), NuovaSoglia, Cammino).
-
 
 
 %% CASO BASE
@@ -54,17 +56,18 @@ ric_prof((S, _), _, _, Cammino, Cammino):- %in realta' questo dovrebbe controlla
 ric_prof((Corrente, Movibili), Soglia, Visitati, _, _):-
     Soglia<0,!,
     write(Corrente), write('Ho sforato la soglia\n'),
-    valutazione(Corrente, Visitati, Movibili, Risultato),
+/*    valutazione(Corrente, Visitati, Movibili, Risultato),
     euristicaMinima(Minimo),
     retractall(euristicaMinima(_)),
     NuovoMinimo is min(Minimo, Risultato),
     assert(euristicaMinima(NuovoMinimo)),
+    */
     fail.
     
 %% PASSO INDUTTIVO
 ric_prof((Corrente, Movibili), Soglia, Visitati, TempCammino, Cammino):-
     write(Corrente), write('Non ho sforato la Soglia\n'),
-    \+checkVisitati((Corrente, Movibili), Visitati), %e' necessario perche' talvolta se riesegue due volte la stessa mossa ordina i movibili in maniera diversa quindi la member fallisce
+    \+checkVisitati((Corrente, Movibili), Visitati),!, %e' necessario perche' talvolta se riesegue due volte la stessa mossa ordina i movibili in maniera diversa quindi la member fallisce
                                                 %nei visitati dobbiamo per forza tenere le coppie, gli stati sono diversi dalle posizioni (per via
                                                 %della possibilita' di modificare il labirinto)
     applicabile(NuovaAzione, Corrente, Movibili, TempCammino),
