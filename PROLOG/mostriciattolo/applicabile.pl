@@ -7,7 +7,7 @@
 
 /***********************************************************************/
 %per facilitare il debug disattivo checkAvversario, per non riscrivere tutti i predicati faccio questo fantoccio che poi VA TOLTO!
-checkAvversario(_, _, _, _).
+%checkAvversario(_, _, _, _).
 /*************************************************************************/
 
 %MI FERMO PERCHE' HO FINITO IL LABIRINTO

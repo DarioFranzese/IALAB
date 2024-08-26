@@ -6,7 +6,7 @@
 
 /***********************************************************************************************/
 %serve solo a semplificare il debug, cosi' gli oggetti non si muovono
-spostaOggetto(_, X, _, X).
+%spostaOggetto(_, X, _, X).
 
 %CASO BASE SONO ARRIVATO ALLA FINE DEL LABIRINTO
 spostaOggetto(nord, pos(1, C), _, pos(1, C)).
@@ -16,6 +16,7 @@ spostaOggetto(nord, pos(R,C), Movibili, pos(R,C)):- NR is R-1, member(martello(p
 spostaOggetto(nord, pos(R,C), Movibili, pos(R,C)):- NR is R-1, member(ghiaccio(pos(NR, C)), Movibili).
 spostaOggetto(nord, pos(R,C), Movibili, pos(R,C)):- NR is R-1, member(gemma(pos(NR, C)), Movibili).
 spostaOggetto(nord, pos(R,C), Movibili, pos(R,C)):- NR is R-1, member(avversario(pos(NR, C)), Movibili).
+spostaOggetto(nord, pos(R,C), Movibili, pos(R,C)):- NR is R-1, member(corrente(pos(NR, C)), Movibili).
 spostaOggetto(nord, pos(R,C), _, pos(R,C)):- NR is R-1, occupata(pos(NR, C)).
 spostaOggetto(nord, pos(R,C), _, pos(R,C)):- NR is R-1, finale(pos(NR, C)).
 
@@ -37,6 +38,7 @@ spostaOggetto(sud, pos(R,C), Movibili, pos(R,C)):- NR is R+1, member(martello(po
 spostaOggetto(sud, pos(R,C), Movibili, pos(R,C)):- NR is R+1, member(ghiaccio(pos(NR, C)), Movibili).
 spostaOggetto(sud, pos(R,C), Movibili, pos(R,C)):- NR is R+1, member(gemma(pos(NR, C)), Movibili).
 spostaOggetto(sud, pos(R,C), Movibili, pos(R,C)):- NR is R+1, member(avversario(pos(NR, C)), Movibili).
+spostaOggetto(sud, pos(R,C), Movibili, pos(R,C)):- NR is R+1, member(corrente(pos(NR, C)), Movibili).
 spostaOggetto(sud, pos(R,C), _, pos(R,C)):- NR is R+1, occupata(pos(NR, C)).
 spostaOggetto(sud, pos(R,C), _, pos(R,C)):- NR is R+1, finale(pos(NR, C)).
 
@@ -57,6 +59,7 @@ spostaOggetto(est, pos(R,C), Movibili, pos(R,C)):- NC is C+1, member(martello(po
 spostaOggetto(est, pos(R,C), Movibili, pos(R,C)):- NC is C+1, member(ghiaccio(pos(R, NC)), Movibili).
 spostaOggetto(est, pos(R,C), Movibili, pos(R,C)):- NC is C+1, member(gemma(pos(R, NC)), Movibili).
 spostaOggetto(est, pos(R,C), Movibili, pos(R,C)):- NC is C+1, member(avversario(pos(R, NC)), Movibili).
+spostaOggetto(est, pos(R,C), Movibili, pos(R,C)):- NC is C+1, member(corrente(pos(R, NC)), Movibili).
 spostaOggetto(est, pos(R,C), _, pos(R,C)):- NC is C+1, occupata(pos(R, NC)).
 spostaOggetto(est, pos(R,C), _, pos(R,C)):- NC is C+1, finale(pos(R, NC)).
 
@@ -77,6 +80,7 @@ spostaOggetto(ovest, pos(R,C), Movibili, pos(R,C)):- NC is C-1, member(martello(
 spostaOggetto(ovest, pos(R,C), Movibili, pos(R,C)):- NC is C-1, member(ghiaccio(pos(R, NC)), Movibili).
 spostaOggetto(ovest, pos(R,C), Movibili, pos(R,C)):- NC is C-1, member(gemma(pos(R, NC)), Movibili).
 spostaOggetto(ovest, pos(R,C), Movibili, pos(R,C)):- NC is C-1, member(avversario(pos(R, NC)), Movibili).
+spostaOggetto(ovest, pos(R,C), Movibili, pos(R,C)):- NC is C-1, member(corrente(pos(R, NC)), Movibili).
 spostaOggetto(ovest, pos(R,C), _, pos(R,C)):- NC is C-1, occupata(pos(R, NC)).
 spostaOggetto(ovest, pos(R,C), _, pos(R,C)):- NC is C-1, finale(pos(R, NC)).
 

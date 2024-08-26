@@ -3,10 +3,11 @@
 ricerca:-
     iniziale(S0),
     movibili(Movibili), %prenda la lista degli oggtti movibili (ghiaccio, emme, avversario, martello), le rimuove e le salva sempre nello stato corrente (per modificarle)
-%    checkUscita(), %Controlla che l' uscita sia libera. Se no, forzera' l' euristica ad andare prima sul martello (asserendo un predicato di controllo, valido sempre, che avra' come semantica "se non 
+    checkUscita(), %Controlla che l' uscita sia libera. Se no, forzera' l' euristica ad andare prima sul martello (asserendo un predicato di controllo, valido sempre, che avra' come semantica "se non 
                    %hai ancora preso il martello, vai prima li")
     %checkUscita funziona, per il momento e' mutato per facilitare il debug.
-    valutazione(S0, [], Movibili, Soglia),
+    %valutazione(S0, [], Movibili, Soglia),
+    Soglia is 11, %e' effettivamente il numero minimo di mosse richieste
 
     limite(Limite),
     LimiteSuperiore is Limite*2, %Il vero limite adesso e' due volte il limite visto che il martello parte da Limite+manhattan.
@@ -17,10 +18,10 @@ ricerca:-
     write('Limite: '), write(Limite), write('\n'),
 
     wrapperRicProf((S0, Movibili), Soglia, Cammino), 
-    %bisogna fare il reverse del cammino
-    write('\nIl risultato e' ), write(Cammino), write('\n '), 
-    write('La lunghezza e '), length(Cammino, Int), write(Int), write('\n '),
-    visualizza_labirinto.
+    reverse(Cammino, Soluzione),
+    write('\nIl risultato e' ), write(Soluzione), write('\n '), 
+    write('La lunghezza e '), length(Cammino, Int), write(Int), write('\n ').
+%    visualizza_labirinto.
 
 
 
@@ -48,14 +49,15 @@ wrapperRicProf((Corrente, Movibili), _, Cammino):-
 
 
 %% CASO BASE
-ric_prof((S, _), _, _, Cammino, Cammino):- %in realta' questo dovrebbe controllare anche Soglia>0, ma io me ne sbatterei allegramente il cazzo. Comporterebbe solo un' iterazione in piu.
-    finale(S),!.
+ric_prof((S, _), _, Visitati, Cammino, Cammino):- %in realta' questo dovrebbe controllare anche Soglia>0, ma io me ne sbatterei allegramente il cazzo. Comporterebbe solo un' iterazione in piu.
+    finale(S),!,  write(Visitati), write('\n').
 
 
 %% CASO SOGLIA SFORATA (siccome decremento di >=1 potrebbe essere negativa)
+%Se sostituisco Soglia con 0 (come nel labirinto classico) si rompe per qualche motivo. E' una cazzata ma mi scoccio di controllare
 ric_prof((Corrente, Movibili), Soglia, Visitati, _, _):-
-    Soglia<0,!,
-    write(Corrente), write('Ho sforato la soglia\n'),
+    Soglia<1,!,
+%    write(Corrente), write('Ho sforato la soglia\n'),
 /*    valutazione(Corrente, Visitati, Movibili, Risultato),
     euristicaMinima(Minimo),
     retractall(euristicaMinima(_)),
@@ -66,12 +68,13 @@ ric_prof((Corrente, Movibili), Soglia, Visitati, _, _):-
     
 %% PASSO INDUTTIVO
 ric_prof((Corrente, Movibili), Soglia, Visitati, TempCammino, Cammino):-
-    write(Corrente), write('Non ho sforato la Soglia\n'),
     \+checkVisitati((Corrente, Movibili), Visitati),!, %e' necessario perche' talvolta se riesegue due volte la stessa mossa ordina i movibili in maniera diversa quindi la member fallisce
                                                 %nei visitati dobbiamo per forza tenere le coppie, gli stati sono diversi dalle posizioni (per via
                                                 %della possibilita' di modificare il labirinto)
+%    write(Corrente), write('Non ho sforato la Soglia\n'),
     applicabile(NuovaAzione, Corrente, Movibili, TempCammino),
     trasforma(NuovaAzione, Corrente, Movibili, NuovoStato, NuoviMovibili), %trasforma deve prima ordinare Movibili+Corrente a seconda di NuovaAzione, e poi spostarli uno ad uno tutti
                                                                            %al momento non e' garantito che il martello sia sempre in testa, bisogna decidere se modificare i predicati
-    updateSoglia(Corrente, NuovoStato, Movibili, NuoviMovibili, Soglia, NuovaSoglia), %questo predicato e' necessario perche' abbiamo due casi diversi nel caso in cui abbiamo preso il martello o no
+    %updateSoglia(Corrente, NuovoStato, Movibili, NuoviMovibili, Soglia, NuovaSoglia), %questo predicato e' necessario perche' abbiamo due casi diversi nel caso in cui abbiamo preso il martello o no
+    NuovaSoglia is Soglia-1,
     ric_prof((NuovoStato, NuoviMovibili), NuovaSoglia, [(Corrente, Movibili) | Visitati], [NuovaAzione | TempCammino], Cammino).
