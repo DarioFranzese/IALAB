@@ -3,7 +3,7 @@ num_colonne(8).
 
 priorityMartello(0).
 
-limite(Risultato) :- num_righe(NR), num_colonne(NC), Risultato is NR*NC.
+limite(1926).
 
 iniziale(pos(1,4)).
 

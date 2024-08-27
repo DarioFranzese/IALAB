@@ -1,1 +1,2 @@
-a:-fail, write('asdasasdas').
+a([T|_], T).
+a([_|Coda], R):-a(Coda, R).

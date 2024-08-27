@@ -1,8 +1,8 @@
 checkUscita:-
     iniziale(S0),
-    dfs(S0, _, []),!.
+    dfs(S0, _, []).
 
-checkUscita:- write('Dobbiamo prima recuperare il martello'), write('\n'), assert(priorityMartello(1)). %ci mette al piu' 11 secondi sul pc di Dario
+checkUscita:- write('Dobbiamo prima recuperare il martello'), write('\n'), assert(priorityMartello(1)).
 
 
 dfs(S, [], _):-finale(S), !. 

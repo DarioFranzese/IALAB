@@ -9,11 +9,8 @@ trasforma(Azione, Corrente, Movibili, NuovoStato, NuoviMovibili):- %NuoviMovibil
                                                                         
 
 %CASO BASE
-%credo vada aggiunto qualche cut
 %abbiamo spostato tutti i movibili (Movibili=[]) e quindi rimuoviamo il corrente dai nuovi movibili e mettiamo il martello in testa (cosa che trasforma deve garantire)
-%TESTATO FUNZIONA
 %caso in cui il martello non e' stato preso (lo rimetto in testa)
-%TempNuovoStato (4a variabile) e' probabilmente inutile, anzi crea problemi. Tanto a un certo punto deve per forza essere istanziata da spostaAgente
 sposta(_, [], NuoviMovibili, NuovoStato, NuovoStato, [martello(X) | NuoviMovibiliFinali]):-
     delete(NuoviMovibili, corrente(_), NM),
     getPosizioneMartello(NM, X),
@@ -34,12 +31,12 @@ sposta(Azione, [ corrente(X) | CodaMovibili], TempMov, _, NuovoStato, NuoviMovib
 
 %TESTATO CON spostaOggetto fake E FUNZIONA
 sposta(Azione, [ gemma(X) | CodaMovibili], TempMov, TempNuovoStato, NuovoStato, NuoviMovibili):-
-    spostaOggetto(Azione, X, TempMov, NuovoStatoOggetto), %questo predicato non dovrebbe modificare i Movibili e quindi non ci deve dare in output un nuovo valore di TempMov
+    spostaOggetto(Azione, X, TempMov, NuovoStatoOggetto),
     delete(TempMov, gemma(X), NewTempMov),
     sposta(Azione, CodaMovibili, [gemma(NuovoStatoOggetto) | NewTempMov], TempNuovoStato, NuovoStato, NuoviMovibili), !.
 
 sposta(Azione, [ avversario(X) | CodaMovibili], TempMov, TempNuovoStato, NuovoStato, NuoviMovibili):-
-    spostaOggetto(Azione, X, TempMov, NuovoStatoOggetto), %questo predicato non dovrebbe modificare i Movibili e quindi non ci deve dare in output un nuovo valore di TempMov
+    spostaOggetto(Azione, X, TempMov, NuovoStatoOggetto),
     delete(TempMov, avversario(X), NewTempMov),
     sposta(Azione, CodaMovibili, [avversario(NuovoStatoOggetto) | NewTempMov], TempNuovoStato, NuovoStato, NuoviMovibili), !.
 
