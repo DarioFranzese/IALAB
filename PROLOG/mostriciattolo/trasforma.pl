@@ -13,6 +13,7 @@ trasforma(Azione, Corrente, Movibili, NuovoStato, NuoviMovibili):- %NuoviMovibil
 %abbiamo spostato tutti i movibili (Movibili=[]) e quindi rimuoviamo il corrente dai nuovi movibili e mettiamo il martello in testa (cosa che trasforma deve garantire)
 %TESTATO FUNZIONA
 %caso in cui il martello non e' stato preso (lo rimetto in testa)
+%TempNuovoStato (4a variabile) e' probabilmente inutile, anzi crea problemi. Tanto a un certo punto deve per forza essere istanziata da spostaAgente
 sposta(_, [], NuoviMovibili, NuovoStato, NuovoStato, [martello(X) | NuoviMovibiliFinali]):-
     delete(NuoviMovibili, corrente(_), NM),
     getPosizioneMartello(NM, X),
@@ -28,7 +29,7 @@ sposta(Azione, [ corrente(X) | CodaMovibili], TempMov, _, NuovoStato, NuoviMovib
     spostaAgente(Azione, X, TempMov, NuovoStatoAgente, MovibiliPostAgente), %questo e' l'unico predicato che dovra' modificare NuovoStato
     delete(MovibiliPostAgente, corrente(X), NuovaCodaMovibili), %Movibili post agente sara' l' elenco dei movibili potenzialmente primo di ghiaccio e martello, tuttavia contiene ancora la posizione
                                                                        %del corrente, che va quindi tolta per poi aggiungerci il nuovo corrente
-    sposta(Azione, CodaMovibili, [corrente(NuovoStato) | NuovaCodaMovibili], NuovoStatoAgente, NuovoStato, NuoviMovibili), !. %metto il corrente in testa tanto e' indifferente
+    sposta(Azione, CodaMovibili, [corrente(NuovoStatoAgente) | NuovaCodaMovibili], NuovoStatoAgente, NuovoStato, NuoviMovibili), !. %metto il corrente in testa tanto e' indifferente
                                                                                                          %Occhio All' utilizzo di NuovoStato non mi convince
 
 %TESTATO CON spostaOggetto fake E FUNZIONA

@@ -7,7 +7,7 @@ ricerca:-
                    %hai ancora preso il martello, vai prima li")
     %checkUscita funziona, per il momento e' mutato per facilitare il debug.
     %valutazione(S0, [], Movibili, Soglia),
-    Soglia is 11, %e' effettivamente il numero minimo di mosse richieste
+    Soglia is 14, %e' effettivamente il numero minimo di mosse richieste
 
     limite(Limite),
     LimiteSuperiore is Limite*2, %Il vero limite adesso e' due volte il limite visto che il martello parte da Limite+manhattan.
@@ -36,7 +36,7 @@ wrapperRicProf((Corrente, Movibili), _, Cammino):-
     write('\nNuova Soglia: '), write(NuovaSoglia),write('\n'),
     limite(Limite), 
     LimiteSuperiore is Limite*2, %Il vero limite adesso e' due volte il limite visto che il martello parte da Limite+manhattan.
-    LimiteSuperiore > NuovaSoglia,!,
+    LimiteSuperiore > NuovaSoglia,!, %questo cut potenzialmente e' inutile
 
 
     retractall(euristicaMinima(_)),
@@ -71,7 +71,7 @@ ric_prof((Corrente, Movibili), Soglia, Visitati, TempCammino, Cammino):-
     \+checkVisitati((Corrente, Movibili), Visitati),!, %e' necessario perche' talvolta se riesegue due volte la stessa mossa ordina i movibili in maniera diversa quindi la member fallisce
                                                 %nei visitati dobbiamo per forza tenere le coppie, gli stati sono diversi dalle posizioni (per via
                                                 %della possibilita' di modificare il labirinto)
-%    write(Corrente), write('Non ho sforato la Soglia\n'),
+    %write(Corrente), write('\n'),
     applicabile(NuovaAzione, Corrente, Movibili, TempCammino),
     trasforma(NuovaAzione, Corrente, Movibili, NuovoStato, NuoviMovibili), %trasforma deve prima ordinare Movibili+Corrente a seconda di NuovaAzione, e poi spostarli uno ad uno tutti
                                                                            %al momento non e' garantito che il martello sia sempre in testa, bisogna decidere se modificare i predicati
