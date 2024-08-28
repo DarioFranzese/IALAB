@@ -26,6 +26,12 @@ ghiaccio(pos(7,2)).
 ghiaccio(pos(7,3)).
 ghiaccio(pos(7,4)).
 
+%% Ghiaccio per chiudere il finale e fare test
+% ghiaccio(pos(2,2)).
+% ghiaccio(pos(2,1)).
+% ghiaccio(pos(3,3)).
+% ghiaccio(pos(3,1)).
+
 martello(pos(1,2)).
 
 avversario(pos(8,7)).
