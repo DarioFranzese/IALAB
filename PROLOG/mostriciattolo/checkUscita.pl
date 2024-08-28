@@ -1,8 +1,8 @@
 checkUscita:-
     iniziale(S0),
-    dfs(S0, _, []).
+    dfs(S0, R, []),!.
 
-checkUscita:- write('Dobbiamo prima recuperare il martello'), write('\n'), assert(priorityMartello(1)).
+checkUscita:- write('Dobbiamo prima recuperare il martello'), write('\n'), assert(priorityMartello).
 
 
 dfs(S, [], _):-finale(S), !. 

@@ -8,6 +8,7 @@ ricerca:-
     Soglia is 1, %4 e' la soglia massima inseribile per garantire l' ottimalita' testando il labirinto del prof con uscita aperta
                   % aggiungendo ghiaccio(pos(4,7)), ghiaccio(pos(5,7)), ghiaccio(pos(5,8)), si blocca l' uscita e la soglia massima e' 14
 
+    
     limite(Limite),
 
 
@@ -25,22 +26,14 @@ ricerca:-
 wrapperRicProf((Corrente, Movibili), Soglia, Cammino):- ric_prof((Corrente, Movibili), Soglia, [], [], Cammino), !.
 
 %%CASO DI FALLIMENTO, AGGIORNAMENTO DELLA SOGLIA
-wrapperRicProf((Corrente, Movibili), _, Cammino):-
-    sogliaPrecedente(NS),
-    NuovaSoglia is NS+1,    
+wrapperRicProf((Corrente, Movibili), Soglia, Cammino):-
+    NuovaSoglia is Soglia+1,    
     
     write('\nNuova Soglia: '), write(NuovaSoglia),write('\n'),
     limite(Limite), 
     LimiteSuperiore is Limite*2, %Il vero limite adesso e' due volte il limite visto che il martello parte da Limite+manhattan.
     LimiteSuperiore > NuovaSoglia,!, %questo cut potenzialmente e' inutile
 
-
-    retractall(sogliaPrecedente(_)),
-    assert(sogliaPrecedente(NuovaSoglia)), %Dopo aver settato la soglia devo permettere alla prossima
-                                                %iterazione di trovarmi il nuovo minimo LOCALE che pero´sara maggiore
-                                                %della soglia, quindi una volta salvata la soglia per l' iterazione
-                                                %setto sogliaPrecedente al massimo cosi' che potro' salvarmi
-                                                %il nuovo minimo (mi serve principalmente per il primo confronto)
     wrapperRicProf((Corrente, Movibili), NuovaSoglia, Cammino).
 
 

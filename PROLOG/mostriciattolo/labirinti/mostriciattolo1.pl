@@ -1,8 +1,6 @@
 num_righe(8).
 num_colonne(8).
 
-priorityMartello(0).
-
 limite(1926).
 
 iniziale(pos(1,4)).
@@ -29,6 +27,11 @@ gemma(pos(8,8)).
 ghiaccio(pos(2,6)).
 ghiaccio(pos(2,7)).
 ghiaccio(pos(7,7)).
+
+%aggiunti, chiudono l' uscita
+ghiaccio(pos(4,7)).
+ghiaccio(pos(5,7)).
+ghiaccio(pos(5,8)).
 
 martello(pos(8,2)).
 

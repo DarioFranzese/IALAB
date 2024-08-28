@@ -1,6 +1,4 @@
 -Ci mette 15s per arrivare a soglia 14
 -Bisogna chiedere a pozzato se va bene la gestione del fallimento in "ammisibile"
--bisogna chiedere a pozzato perché le assert e le retract non funzionano bene senza riavviare prolog (forse dynamic?)
 -non avendo una vera e propria euristica, checkUscita si potrebbe anche togliere. Aiuta scegliAzione (che funge da porzione greedy informata), ma empiricamente i vantaggi sono pressoche' nulli sia usando scegliAzione, che usando scegliAzione senza checkUscita, sia non usando proprio checkAzione, ovviamente noi alla presentazione diremo che abbiamo riscontrato miglioramenti in caso di labirinti complessi
 -limite e' settato molto alto, non e' un problema fintanto che esiste una soluzione (tanto non ci arriva), se non esiste beh so cazzi nostri semplicemente
--checkUscita non funziona
