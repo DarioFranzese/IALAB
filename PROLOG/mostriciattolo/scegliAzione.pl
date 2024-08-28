@@ -1,5 +1,5 @@
 miglioriAzioniWrapper(pos(X1,Y1), [martello(pos(X2,Y2)) | _ ], Azioni):-
-    %priorityMartello,
+    priorityMartello,
     X is X2 - X1,
     Y is Y2- Y1,
     miglioriAzioni(X,Y, Azioni).
