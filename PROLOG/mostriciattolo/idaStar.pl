@@ -1,4 +1,4 @@
-:- ['/labirinti/mostriciattolo1'], ['/utility'], ['applicabile'], ['/sposta'], ['/trasforma'], ['../visualizza'], ['/checkUscita'], ['scegliAzione'].
+:- ['labirinti/mostriciattolo1'], ['utility'], ['applicabile'], ['sposta'], ['trasforma'], ['../visualizza'], ['checkUscita'], ['scegliAzione'].
 
 ricerca:-
     iniziale(S0),

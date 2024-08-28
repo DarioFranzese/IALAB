@@ -1,5 +1,5 @@
 miglioriAzioniWrapper(pos(X1,Y1), [martello(pos(X2,Y2)) | _ ], Azioni):-
-    priorityMartello,
+    %priorityMartello,
     X is X2 - X1,
     Y is Y2- Y1,
     miglioriAzioni(X,Y, Azioni).
@@ -59,16 +59,12 @@ miglioriAzioni(X,Y,[nord, est, ovest, sud]):-
     Y=<0,
     X>0, !.
 
-
-
 miglioriAzioni(X,Y,[nord, ovest, est, sud]):-
     abs(X, R1),
     abs(Y, R2),
     R1>R2,
     Y=<0,
     X=<0, !.
-
-
 
 scegliAzione(Posizione, Movibili, TempCammino, Azione):-
     miglioriAzioniWrapper(Posizione, Movibili, Azioni),!,
