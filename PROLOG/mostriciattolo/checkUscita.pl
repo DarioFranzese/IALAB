@@ -2,10 +2,10 @@ checkUscita:-
     iniziale(S0),
     dfs(S0, _, []),!.
 
-checkUscita:- write('Dobbiamo prima recuperare il martello'), write('\n'), assert(priorityMartello).
+checkUscita:- write('Dobbiamo prima recuperare il martello'), write('\n'), assert(priorityMartello(1)).
 
 
-dfs(S, [], _):-finale(S), !, assert(priorityMartello). 
+dfs(S, [], _):-finale(S), !, assert(priorityMartello(0)). 
 
 dfs(S, [Azione| ListaAzioni], Visitati):-
     \+member(S, Visitati), !,

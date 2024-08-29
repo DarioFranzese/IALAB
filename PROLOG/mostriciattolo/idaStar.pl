@@ -4,16 +4,16 @@
 ['trasforma'], 
 ['../visualizza'], 
 ['checkUscita'], 
-%['labirinti/mostriciattolo1'], 
+['labirinti/mostriciattolo1'], 
 %['labirinti/labirinto1'],
 %['labirinti/labirinto2'],
-['labirinti/labirinto3'],
+%['labirinti/labirinto3'],
 ['scegliAzione'].
 
 ricerca:-
     iniziale(S0),
     movibili(Movibili), %prenda la lista degli oggtti che possono cambiare posizione nel tempo (ghiaccio, gemme, avversario, martello)
-    checkUscita(), %Controlla che l' uscita sia libera. Se no, forzera' l' euristica ad andare prima sul martello (asserendo un predicato di controllo, valido sempre, che avra' come semantica "se non 
+    checkUscita, %Controlla che l' uscita sia libera. Se no, forzera' l' euristica ad andare prima sul martello (asserendo un predicato di controllo, valido sempre, che avra' come semantica "se non 
 
     Soglia is 1, %4 e' la soglia massima inseribile per garantire l' ottimalita' testando il labirinto del prof con uscita aperta
                   % aggiungendo ghiaccio(pos(4,7)), ghiaccio(pos(5,7)), ghiaccio(pos(5,8)), si blocca l' uscita e la soglia massima e' 14
