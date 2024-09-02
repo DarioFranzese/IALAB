@@ -19,7 +19,6 @@ spostaOggetto(nord, pos(R, C), Movibili,  NuovoStato):-
     spostaOggetto(nord, pos(NR, C), Movibili,  NuovoStato).
 
 
-
 %SUD
 
 %CASO BASE SONO ARRIVATO ALLA FINE DEL LABIRINTO

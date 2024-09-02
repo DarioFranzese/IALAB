@@ -17,13 +17,9 @@ ricerca:-
 
     Soglia is 1, %4 e' la soglia massima inseribile per garantire l' ottimalita' testando il labirinto del prof con uscita aperta
                   % aggiungendo ghiaccio(pos(4,7)), ghiaccio(pos(5,7)), ghiaccio(pos(5,8)), si blocca l' uscita e la soglia massima e' 14
-
     
-    limite(Limite),
-
 
     write('Soglia iniziale: '), write(Soglia), write('\n'),
-    write('Limite: '), write(Limite), write('\n'),
 
     wrapperRicProf((S0, Movibili), Soglia, Cammino), 
     reverse(Cammino, Soluzione),
@@ -48,8 +44,7 @@ wrapperRicProf((Corrente, Movibili), Soglia, Cammino):-
 
 
 %% CASO BASE
-ric_prof((S, _), _, Visitati, Cammino, Cammino):- %in realta' questo dovrebbe controllare anche Soglia>0, ma io me ne sbatterei allegramente il cazzo. Comporterebbe solo un' iterazione in piu.
-    finale(S),!,  write(Visitati), write('\n'). %la write dei visitati e' mero debug
+ric_prof((S, _), _, _, Cammino, Cammino):- finale(S),!.
 
 
 ric_prof((Corrente, Movibili), Soglia, Visitati, TempCammino, Cammino):-

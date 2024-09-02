@@ -16,7 +16,7 @@ checkAvversario(_, R, C, _):- finale(pos(R, C)).
 checkAvversario(_, R, C, [martello(pos(_, _)) | Movibili ]):- member(ghiaccio(pos(R,C)), Movibili).
 
 %CASO SPECIALE QUANDO CONTROLLO CHE L' AVVERSARIO NON MI FINISCA ADDOSSO: IL MARTELLO FUNGE DA OSTACOLO ALL' AVVERSARIO
-checkAvversario(_, R, C, [martello(pos(-1,-1)) | Movibili]):- member(martello(pos(R,C)), Movibili). 
+checkAvversario(_, R, C, [flag(pos(-1,-1)) | Movibili]):- member(martello(pos(R,C)), Movibili). 
 
 %CASO IN CUI "PRENDEREI" IL MARTELLO, RICHIAMA SE STESSO SIMULANDO LA PRESA DEL MARTELLO (toglierlo dai movibili)
 checkAvversario(Azione, R, C, [martello(pos(R, C)) | CodaMovibili]):- checkAvversario(Azione, R, C, CodaMovibili).
@@ -37,18 +37,18 @@ applicabile(Azione, Posizione, Movibli, []):- applicabile(Azione, Posizione, Mov
 applicabile(nord, pos(R, C), Movibili, [UltimaAzione | _]):-
     nord \= UltimaAzione,
     (checkAvversario(nord, R, C, Movibili)->true;fail),
-    (checkAvversario(sud, R, C, [martello(pos(-1,-1)) | Movibili])->true;fail).
+    (checkAvversario(sud, R, C, [flag(pos(-1,-1)) | Movibili])->true;fail).
 applicabile(est, pos(R, C), Movibili, [UltimaAzione | _]):-
     est \= UltimaAzione,
     (checkAvversario(est, R, C, Movibili)->true;fail),
-    (checkAvversario(ovest, R, C, [martello(pos(-1,-1)) | Movibili])->true;fail).
+    (checkAvversario(ovest, R, C, [flag(pos(-1,-1)) | Movibili])->true;fail).
 
 applicabile(sud, pos(R, C), Movibili, [UltimaAzione | _]):-
     sud \= UltimaAzione,
     (checkAvversario(sud, R, C, Movibili)->true;fail),
-    (checkAvversario(nord, R, C, [martello(pos(-1,-1)) | Movibili])->true;fail).
+    (checkAvversario(nord, R, C, [flag(pos(-1,-1)) | Movibili])->true;fail).
 
 applicabile(ovest, pos(R, C), Movibili, [UltimaAzione | _]):-
     ovest \= UltimaAzione,
     (checkAvversario(ovest, R, C, Movibili)->true;fail),
-    (checkAvversario(est, R, C, [martello(pos(-1,-1)) | Movibili])->true;fail).
+    (checkAvversario(est, R, C, [flag(pos(-1,-1)) | Movibili])->true;fail).
