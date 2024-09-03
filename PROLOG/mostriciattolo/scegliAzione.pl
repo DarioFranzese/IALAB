@@ -66,6 +66,7 @@ miglioriAzioni(X,Y,[nord, ovest, est, sud]):-
     Y=<0,
     X=<0, !.
 
+
 scegliAzione(Posizione, Movibili, TempCammino, Azione):-
     miglioriAzioniWrapper(Posizione, Movibili, Azioni),!,
     getAzioneApplicabile(Azioni, Posizione, Movibili, TempCammino, Azione).

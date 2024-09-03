@@ -1,0 +1,29 @@
+CLINGO - CLASSICO
+-Prolog Lab. Classico
+-- Introduzione strategia adottate(?)
+--IdaS* (ric_prof)
+--A*
+--checkvisitati
+--generaStati
+--labirinti (alcuni)
+--confronto sui risultati
+
+
+
+-CLingo 2 slides
+--Vincoli
+--Analisi dei Risultati
+
+MOSTRICIATTOLO
+--introduzione (strategia + checkUscita + modellazione)
+--spostaAgente
+--scegliAzione
+--analisi dei risultati
+
+CLIPS
+--introduzione strategie (due fasi)
+--templates
+--fase di ricerca colori (grafo) 2 slides
+--fase di ordinamento dummie
+--fase di ordinamento smart
+--analisi dei risultati

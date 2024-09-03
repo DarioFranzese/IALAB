@@ -56,7 +56,6 @@ generaStati(Corrente, Path, Valutazione, [[NuovoStato, Azione] | CodaNuoviStati]
 inserimentoOrdinato(NuovoStato, Path, Valutazione, [], [[NuovoStato, Path, Valutazione]]):-!.
 
 inserimentoOrdinato(NuovoStato, Path, Valutazione, [[TestaStato, TestaPath, Val] | CodaFrontiera], [[NuovoStato, Path, Valutazione], [TestaStato, TestaPath, Val] | CodaFrontiera]):-
-%   append([[NuovoStato, Path, Valutazione]], Frontiera, NuovaFrontiera). %prova non ordinata
     Valutazione =< Val.
 
 %inserimento ordinato in lista ordinata di interi esempio

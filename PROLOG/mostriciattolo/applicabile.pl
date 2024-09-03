@@ -38,6 +38,7 @@ applicabile(nord, pos(R, C), Movibili, [UltimaAzione | _]):-
     nord \= UltimaAzione,
     (checkAvversario(nord, R, C, Movibili)->true;fail),
     (checkAvversario(sud, R, C, [flag(pos(-1,-1)) | Movibili])->true;fail).
+    
 applicabile(est, pos(R, C), Movibili, [UltimaAzione | _]):-
     est \= UltimaAzione,
     (checkAvversario(est, R, C, Movibili)->true;fail),

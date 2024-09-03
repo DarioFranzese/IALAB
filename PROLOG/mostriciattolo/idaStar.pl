@@ -37,8 +37,7 @@ wrapperRicProf((Corrente, Movibili), Soglia, Cammino):-
     
     write('\nNuova Soglia: '), write(NuovaSoglia),write('\n'),
     limite(Limite), 
-    LimiteSuperiore is Limite*2, %Il vero limite adesso e' due volte il limite visto che il martello parte da Limite+manhattan.
-    LimiteSuperiore > NuovaSoglia,!, %questo cut potenzialmente e' inutile
+    Limite > NuovaSoglia,!, %questo cut potenzialmente e' inutile
 
     wrapperRicProf((Corrente, Movibili), NuovaSoglia, Cammino).
 
