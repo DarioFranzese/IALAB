@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invia Fermata</title>
+</head>
+<body>
+    <form id="stopForm">
+        <label for="stopInput">Inserisci fermata:</label>
+        <input type="text" id="stopInput" name="stop" required>
+        <button type="submit">Invia</button>
+    </form>
+
+    <script>
+        document.getElementById("stopForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Impedisce il comportamento predefinito del form
+            
+            let stopValue = document.getElementById("stopInput").value;
+            if (stopValue.trim() !== "") {
+                let url = "http://gpa.madbob.org/query.php?stop=" + encodeURIComponent(stopValue);
+                window.location.href = url; // Reindirizza all'endpoint con il parametro stop
+            } else {
+                alert("Inserisci una fermata valida.");
+            }
+        });
+    </script>
+</body>
+</html>
